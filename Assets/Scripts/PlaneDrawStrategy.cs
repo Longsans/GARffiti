@@ -4,7 +4,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace Assets.Scripts
 {
-    public class PlanesDrawStrategy : BaseDrawStrategy
+    public class PlaneDrawStrategy : BaseDrawStrategy
     {
         public override void Draw()
         {
@@ -69,7 +69,15 @@ namespace Assets.Scripts
             }
         }
 
-        public PlanesDrawStrategy(ARCursor arCursor) : base(arCursor)
+        public override void Dispose()
+        {
+            foreach (var plane in _planeManager.trackables)
+            {
+                plane.gameObject.SetActive(false);
+            }
+        }
+
+        public PlaneDrawStrategy(ARCursor arCursor) : base(arCursor)
         {
             _raycastManager = ARCursor.FindObjectOfType<ARRaycastManager>();
             _planeManager = ARCursor.FindObjectOfType<ARPlaneManager>();

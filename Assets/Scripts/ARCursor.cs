@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
 using Assets.Scripts;
 
 public class ARCursor : MonoBehaviour
@@ -17,19 +16,22 @@ public class ARCursor : MonoBehaviour
 
     void Start()
     {
-        switch (DrawMode)
-        {
-            case __DrawMode.PlanesOnly:
-                _drawStrategy = new PlanesDrawStrategy(this);
-                break;
-            case __DrawMode.SpaceOnly:
-                _drawStrategy = new SpaceDrawStrategy(this);
-                break;
-        }
+        
     }
 
     void Update()
     {
+        if (DrawMode == __DrawMode.PlanesOnly && _drawStrategy?.GetType() != typeof(PlaneDrawStrategy))
+        {
+            _drawStrategy?.Dispose();
+            _drawStrategy = new PlaneDrawStrategy(this);
+        }
+        else if (DrawMode == __DrawMode.SpaceOnly && _drawStrategy?.GetType() != typeof(SpaceDrawStrategy))
+        {
+            _drawStrategy?.Dispose();
+            _drawStrategy = new SpaceDrawStrategy(this);
+        }
+
         _drawStrategy.UpdateCursorPosition();
         _drawStrategy.Draw();
     }

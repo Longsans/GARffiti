@@ -28,6 +28,11 @@ namespace Assets.Scripts
             cursor.transform.position = Camera.main.transform.position + 2.0f * Camera.main.transform.forward;
         }
 
+        public override void Dispose()
+        {
+            
+        }
+
         public SpaceDrawStrategy(ARCursor arCursor) : base(arCursor)
         {
             ARCursor.FindObjectOfType<ARPlaneManager>().requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
