@@ -16,7 +16,7 @@ public class ARCursor : MonoBehaviour
 
     void Start()
     {
-        
+        StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial = Resources.Load<Material>("Materials/Stroke");
     }
 
     void Update()

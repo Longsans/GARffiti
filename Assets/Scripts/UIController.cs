@@ -12,10 +12,21 @@ public class UIController : MonoBehaviour
     private Button _strwidthBtn;
     private Button _strcolorBtn;
     private VisualElement _strwidthContainer;
-    private SliderInt _strwidthSlider;
+    private Slider _strwidthSlider;
+    private VisualElement _strcolorContainer;
+    private SliderInt _strcolorRedSlider;
+    private SliderInt _strcolorGreenSlider;
+    private SliderInt _strcolorBlueSlider;
+    private SliderInt _strcolorAlphaSlider;
+
+    private VisualElement[] _elements;
+
+    private ARCursor _cursor;
+    private Material _material;
 
     private bool _modesVisible;
     private bool _strwidthSliderVisible;
+    private bool _strcolorContainerVisible;
 
     // Start is called before the first frame update
     void Start()
@@ -26,75 +37,102 @@ public class UIController : MonoBehaviour
         _spaceModeBtn = root.Q<Button>("spacemode-button");
         _strwidthBtn = root.Q<Button>("strwidth-button");
         _strcolorBtn = root.Q<Button>("strcolor-button");
-        _strwidthContainer = root.Q<VisualElement>("strwidth-slidercontainer");
-        _strwidthSlider = _strwidthContainer.Q<SliderInt>("strwidth-slider");
+        _strwidthContainer = root.Q<VisualElement>("strwidth-container");
+        _strwidthSlider = _strwidthContainer.Q<Slider>("strwidth-slider");
+        _strcolorContainer = root.Q<VisualElement>("strcolor-container");
+        _strcolorRedSlider = _strcolorContainer.Q<SliderInt>("red-slider");
+        _strcolorGreenSlider = _strcolorContainer.Q<SliderInt>("green-slider");
+        _strcolorBlueSlider = _strcolorContainer.Q<SliderInt>("blue-slider");
+        _strcolorAlphaSlider = _strcolorContainer.Q<SliderInt>("alpha-slider");
+
+        _cursor = FindObjectOfType<ARCursor>();
+        var materialColor = _cursor.StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial.color;
+        _strcolorRedSlider.value = (int)materialColor.r;
+        _strcolorGreenSlider.value = (int)materialColor.g;
+        _strcolorBlueSlider.value = (int)materialColor.b;
+        _strcolorAlphaSlider.value = (int)materialColor.a;
+        _strcolorBtn.Q<VisualElement>("icon").style.unityBackgroundImageTintColor = new StyleColor(materialColor);
 
         _modeBtn.clicked += ToggleDrawModesVisible;
         _planeModeBtn.clicked += SwitchToPlaneMode;
         _spaceModeBtn.clicked += SwitchToSpaceMode;
         _strwidthBtn.clicked += ToggleStrokeWidthSliderVisible;
+        _strcolorBtn.clicked += ToggleStrokeColorContainerVisible;
         _strwidthSlider.RegisterValueChangedCallback(ChangeStrokeWidth);
+        _strcolorRedSlider.RegisterValueChangedCallback(ChangeStrokeColor);
+        _strcolorGreenSlider.RegisterValueChangedCallback(ChangeStrokeColor);
+        _strcolorBlueSlider.RegisterValueChangedCallback(ChangeStrokeColor);
+        _strcolorAlphaSlider.RegisterValueChangedCallback(ChangeStrokeColor);
 
         _planeModeBtn.visible = false;
         _spaceModeBtn.visible = false;
-        _strwidthSlider.value = 12;
-        _strwidthContainer.visible = false;
+        _strwidthSlider.value = 0.4f;
+        _strwidthContainer.visible = _strwidthSliderVisible = false;
+        _strcolorContainer.visible = _strcolorContainerVisible = false;
+
+        _elements = new VisualElement[]
+        {
+            _modeBtn,
+            _planeModeBtn,
+            _spaceModeBtn,
+            _strwidthBtn,
+            _strcolorBtn,
+            _strwidthContainer,
+            _strcolorContainer,
+        };
+
+        var safeArea = Screen.safeArea;
+
+        foreach (var e in _elements)
+            e.transform.position = new Vector3(safeArea.x, safeArea.y, e.transform.position.z);
 
         _modesVisible = false;
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void ToggleDrawModesVisible()
     {
-        if (_modesVisible = !_modesVisible)
-        {
-            _planeModeBtn.visible = true;
-            _spaceModeBtn.visible = true;
-        }
-        else
-        {
-            _planeModeBtn.visible = false;
-            _spaceModeBtn.visible = false;
-        }
+        _planeModeBtn.visible = _spaceModeBtn.visible = _modesVisible = !_modesVisible;
     }
 
     private void ToggleStrokeWidthSliderVisible()
     {
-        if (_strwidthSliderVisible = !_strwidthSliderVisible)
-            _strwidthContainer.visible = true;
-        else 
-            _strwidthContainer.visible = false;
+        _strwidthContainer.visible = _strwidthSliderVisible = !_strwidthSliderVisible;
+    }
+
+    private void ToggleStrokeColorContainerVisible()
+    {
+        _strcolorContainer.visible = _strcolorContainerVisible = !_strcolorContainerVisible;
     }
 
     private void SwitchToPlaneMode()
     {
-        var cursor = FindObjectOfType<ARCursor>();
-        cursor.DrawMode = ARCursor.__DrawMode.PlanesOnly;
-        // remove current visual element and add new one
-        //
+        _cursor.DrawMode = ARCursor.__DrawMode.PlanesOnly;
+        _modeBtn.Q<VisualElement>("currentmode-icon").style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Icons/black-trap"));
 
         ToggleDrawModesVisible();
     }
 
     private void SwitchToSpaceMode()
     {
-        var cursor = FindObjectOfType<ARCursor>();
-        cursor.DrawMode = ARCursor.__DrawMode.SpaceOnly;
-        // remove current visual element and add new one
-        //
-        
+        _cursor.DrawMode = ARCursor.__DrawMode.SpaceOnly;
+        _modeBtn.Q<VisualElement>("currentmode-icon").style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Icons/3d-cube"));
+
         ToggleDrawModesVisible();
     }
 
-    private void ChangeStrokeWidth(ChangeEvent<int> e)
+    private void ChangeStrokeWidth(ChangeEvent<float> e)
     {
-        //change stroke width
-        //
+        _cursor.StrokePrefab.GetComponent<TrailRenderer>().widthMultiplier = e.newValue;
+        _strwidthBtn.text = $"{e.newValue}x";
+    }
 
-        _strwidthBtn.text = $"{e.newValue}px";
+    private void ChangeStrokeColor(ChangeEvent<int> e)
+    {
+        _material = new Material(_cursor.StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial)
+        {
+            color = new Color(_strcolorRedSlider.value, _strcolorGreenSlider.value, _strcolorBlueSlider.value, _strcolorAlphaSlider.value)
+        };
+        _cursor.StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial = _material;
+        _strcolorBtn.Q<VisualElement>("icon").style.unityBackgroundImageTintColor = new StyleColor(_material.color);
     }
 }
