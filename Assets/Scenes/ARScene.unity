@@ -296,6 +296,8 @@ MonoBehaviour:
   DrawMode: 1
   StrokePrefab: {fileID: 1842534014309632767, guid: a210faab42c9ca0468ae0aab8626458f,
     type: 3}
+  LinePrefab: {fileID: 5059908639697210027, guid: 2c62db60cdb41554ba81b5b32d32f1eb,
+    type: 3}
 --- !u!1 &388525029
 GameObject:
   m_ObjectHideFlags: 0

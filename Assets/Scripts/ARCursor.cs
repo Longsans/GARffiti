@@ -11,12 +11,13 @@ public class ARCursor : MonoBehaviour
 
     public __DrawMode DrawMode;
     public GameObject StrokePrefab;
+    public GameObject LinePrefab;
 
     private BaseDrawStrategy _drawStrategy;
 
     void Start()
     {
-        StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial = Resources.Load<Material>("Materials/Stroke");
+        //StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial = Resources.Load<Material>("Materials/Stroke");
     }
 
     void Update()

@@ -14,7 +14,8 @@ namespace Assets.Scripts
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
-                        stroke = ARCursor.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity, cursor.transform);
+                        _line = ARCursor.Instantiate(cursor.LinePrefab).GetComponent<LineRenderer>();
+                        _line.transform.rotation = Quaternion.LookRotation(-(_currentPlane as ARPlane).normal, _line.transform.up);
                         break;
 
                     // TODO: FIX FINGER MOVEMENT BUGS
@@ -26,13 +27,18 @@ namespace Assets.Scripts
                     //    _stroke.transform.position += Vector3.ProjectOnPlane(endPoint - startPoint, plane.normal);
                     //    break;
                     case TouchPhase.Ended:
-                        if (Input.touchCount == 1) stroke.transform.parent = null;
+                        if (Input.touchCount == 1) stroke = null;
                         break;
+                }
+
+                if (_drawing)
+                {
+                    _line.SetPosition(_line.positionCount++, cursor.transform.position);
                 }
             }
             else if (_drawing)
             {
-                stroke.transform.parent = null;
+                _line = null;
             }
         }
 
@@ -88,8 +94,9 @@ namespace Assets.Scripts
         private ARTrackable _currentPlane;
         private ARRaycastManager _raycastManager;
         private ARPlaneManager _planeManager;
+        private LineRenderer _line;
         private bool _planeDetected;
-        private bool _drawing => stroke != null && stroke.transform.parent == cursor.transform;
+        private bool _drawing => _line != null;
 
         private Vector3 _currentCursorPosition;
     }

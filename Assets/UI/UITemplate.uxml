@@ -1,8 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" ml="UnityEditor.XR.MagicLeap" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="sheet.uss" />
-    <ui:VisualElement style="height: 140px; justify-content: center;">
-        <uie:ColorField label="Color" value="#FFFFFFFF" show-eye-dropper="true" hdr="true" style="position: absolute; height: 75px; width: 531px; flex-direction: row; justify-content: flex-start; align-items: stretch; font-size: 36px; background-color: rgb(30, 6, 255);" />
-    </ui:VisualElement>
+    <ui:VisualElement style="height: 140px; justify-content: center;" />
     <ui:Button display-tooltip-when-elided="true" name="mode-button" class="circular-button-style" style="align-items: center;">
         <ui:VisualElement name="currentmode-icon" class="icon-style" style="background-image: resource(&apos;Icons/3d-cube&apos;);" />
     </ui:Button>
