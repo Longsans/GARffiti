@@ -33,7 +33,6 @@ public class ARCursor : MonoBehaviour
             _drawStrategy = new SpaceDrawStrategy(this);
         }
 
-        _drawStrategy.UpdateCursorPosition();
         _drawStrategy.Draw();
     }
 }

@@ -11,67 +11,65 @@ namespace Assets.Scripts
             if (_planeDetected && Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
-                switch (touch.phase)
+
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    case TouchPhase.Began:
-                        _line = ARCursor.Instantiate(cursor.LinePrefab).GetComponent<LineRenderer>();
-                        _line.transform.rotation = Quaternion.LookRotation(-(_currentPlane as ARPlane).normal, _line.transform.up);
-                        break;
-
-                    // TODO: FIX FINGER MOVEMENT BUGS
-
-                    //case TouchPhase.Moved:
-                    //    var plane = _currentPlane as ARPlane;
-                    //    var startPoint = Camera.main.ScreenToWorldPoint(touch.position - touch.deltaPosition);
-                    //    var endPoint = Camera.main.ScreenToWorldPoint(touch.position);
-                    //    _stroke.transform.position += Vector3.ProjectOnPlane(endPoint - startPoint, plane.normal);
-                    //    break;
-                    case TouchPhase.Ended:
-                        if (Input.touchCount == 1) stroke = null;
-                        break;
+                    if (Input.touchCount == 1) _currentLine = null;
                 }
-
-                if (_drawing)
+                else
                 {
-                    _line.SetPosition(_line.positionCount++, cursor.transform.position);
-                }
-            }
-            else if (_drawing)
-            {
-                _line = null;
-            }
-        }
+                    UpdateCursorPosition(touch.position);
 
-        public override void UpdateCursorPosition()
-        {
-            DetectPlanes();
-            cursor.transform.position = _currentCursorPosition;
-        }
-
-        private void DetectPlanes()
-        {
-            var screenPosition = Camera.main.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
-            List<ARRaycastHit> hits = new List<ARRaycastHit>();
-            _raycastManager.Raycast(screenPosition, hits, UnityEngine.XR.ARSubsystems.TrackableType.Planes);
-
-            _planeDetected = hits.Count > 0;
-            if (_planeDetected)
-            {
-                if (!_drawing) _currentPlane = hits[0].trackable;
-
-                foreach (var plane in _planeManager.trackables)
-                {
-                    plane.gameObject.SetActive(plane == _currentPlane);
-                }
-
-                for (int i = 0; i < hits.Count; i++)
-                {
-                    if (hits[i].trackable == _currentPlane)
+                    if (_planeDetected)
                     {
-                        _currentCursorPosition = hits[i].pose.position;
-                        break;
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            FocusOnPlane(_currentPlane);
+                            _currentLine = new Line(cursor.LinePrefab, cursor.transform.position, (ARPlane)_currentPlane);
+                        }
+                        else
+                            _currentLine.DrawTo(cursor.transform.position);
                     }
                 }
+            }
+            else if (Input.touchCount < 1)
+            {
+                UpdateCursorPosition(Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
+                FocusOnPlane(_currentPlane);
+            }
+        }
+
+        private void UpdateCursorPosition(Vector2 touchPosition)
+        {
+            var hits = RaycastFromScreen(touchPosition);
+            if (hits.Count > 0)
+            {
+                if (!_drawing)
+                    _currentPlane = hits[0].trackable;
+                
+                foreach (var hit in hits)
+                {
+                    if (hit.trackable == _currentPlane)
+                        cursor.transform.position = hit.pose.position;
+                }
+            }
+            else
+                _currentPlane = null;
+        }
+
+        private List<ARRaycastHit> RaycastFromScreen(Vector2 screenPoint)
+        {
+            List<ARRaycastHit> hits = new List<ARRaycastHit>();
+            _raycastManager.Raycast(screenPoint, hits, UnityEngine.XR.ARSubsystems.TrackableType.Planes);
+
+            return hits;
+        }
+
+        private void FocusOnPlane(ARTrackable currentPlane)
+        {
+            foreach (var plane in _planeManager.trackables)
+            {
+                plane.gameObject.SetActive(plane == currentPlane);
             }
         }
 
@@ -94,10 +92,8 @@ namespace Assets.Scripts
         private ARTrackable _currentPlane;
         private ARRaycastManager _raycastManager;
         private ARPlaneManager _planeManager;
-        private LineRenderer _line;
-        private bool _planeDetected;
-        private bool _drawing => _line != null;
-
-        private Vector3 _currentCursorPosition;
+        private Line _currentLine;
+        private bool _planeDetected => _currentPlane != null;
+        private bool _drawing => _currentLine != null;
     }
 }

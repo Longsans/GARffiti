@@ -11,21 +11,18 @@ namespace Assets.Scripts
             {
                 var touch = Input.GetTouch(0);
 
-                switch (touch.phase)
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    case TouchPhase.Began:
+                    if (Input.touchCount == 1) stroke.transform.parent = null;
+                }
+                else
+                {
+                    cursor.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, _distanceFromCamera));
+                    if (touch.phase == TouchPhase.Began)
                         stroke = ARCursor.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity, cursor.transform);
-                        break;
-                    case TouchPhase.Ended:
-                        if (Input.touchCount == 1) stroke.transform.parent = null;
-                        break;
                 }
             }
-        }
-
-        public override void UpdateCursorPosition()
-        {
-            cursor.transform.position = Camera.main.transform.position + 2.0f * Camera.main.transform.forward;
+            else cursor.transform.position = Camera.main.transform.position + _distanceFromCamera * Camera.main.transform.forward;
         }
 
         public override void Dispose()
@@ -36,6 +33,9 @@ namespace Assets.Scripts
         public SpaceDrawStrategy(ARCursor arCursor) : base(arCursor)
         {
             ARCursor.FindObjectOfType<ARPlaneManager>().requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
+            _distanceFromCamera = 2.0f;
         }
+
+        private float _distanceFromCamera;
     }
 }
