@@ -5,7 +5,6 @@ namespace Assets.Scripts
 {
     public abstract class BaseDrawStrategy : IDisposable
     {
-        public abstract void UpdateCursorPosition();
         public abstract void Draw();
         public abstract void Dispose();
 
