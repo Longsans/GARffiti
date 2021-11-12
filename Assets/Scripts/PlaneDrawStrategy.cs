@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 
 namespace Assets.Scripts
@@ -11,6 +12,10 @@ namespace Assets.Scripts
             if (_planeDetected && Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
+
+                // if player touched UI button then ignore
+                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                    return;
 
                 if (touch.phase == TouchPhase.Ended)
                 {
