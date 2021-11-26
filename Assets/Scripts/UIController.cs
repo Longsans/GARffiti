@@ -3,16 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleFileBrowser;
+using NativeGalleryNamespace;
 
 public class UIController : MonoBehaviour
 {
     public Image DrawModeImage;
+    public GameObject StrokeWidthSlider;
+    public Text StrokeWidthText;
+    public GameObject StrokeColorPicker;
+    public Image StrokeColorImage;
 
     private ARCursor.__DrawMode _drawMode;
+    private LineRenderer lineRend;
+    private TrailRenderer trailRend;
 
     private void Start()
     {
         _drawMode = FindObjectOfType<ARCursor>().DrawMode;
+        lineRend = FindObjectOfType<ARCursor>().LinePrefab.GetComponent<LineRenderer>();
+        trailRend = FindObjectOfType<ARCursor>().StrokePrefab.GetComponent<TrailRenderer>();
+        StrokeColorImage.color = lineRend.sharedMaterial.color;
     }
 
     public void ChangeDrawModeIcon()
@@ -36,32 +46,47 @@ public class UIController : MonoBehaviour
         FileBrowser.ShowLoadDialog(paths =>
         {
             byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(paths[0]);
-            Texture2D texture = new Texture2D(1, 1);
+            Texture2D texture = new Texture2D(256, 256)
+            {
+                wrapMode = TextureWrapMode.Repeat
+            };
             texture.LoadImage(bytes);
 
-            var lineRend = FindObjectOfType<ARCursor>().LinePrefab.GetComponent<LineRenderer>();
+            
+            lineRend.sharedMaterial = trailRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Std. Material"));
             lineRend.sharedMaterial.mainTexture = texture;
+
         }, null, FileBrowser.PickMode.Files, false, null, null, "Load Image for Texture");
     }
 
-    private IEnumerable ShowLoadDialogCoroutine()
+    public void ToggleStrokeWidthSlider()
     {
-        yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.Files, false, null, null, "Load Image for Texture");
+        StrokeWidthSlider.SetActive(!StrokeWidthSlider.activeInHierarchy);
+    }
 
-        Debug.Log(FileBrowser.Success);
+    public void OnStrokeWidthValueChange(float value)
+    {
+        lineRend.widthMultiplier = trailRend.widthMultiplier = value;
+        StrokeWidthText.text = value.ToString("0.00");
+    }
 
-        if (FileBrowser.Success)
-        {
-            byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
-            Texture2D texture = new Texture2D(1, 1);
-            texture.LoadImage(bytes);
+    public void ToggleStrokeColorPicker()
+    {
+        var colorPicker = StrokeColorPicker.GetComponent<HSVPicker.ColorPicker>();
+        colorPicker.CurrentColor = lineRend.sharedMaterial.color;
+        StrokeColorPicker.SetActive(!StrokeColorPicker.activeInHierarchy);
+    }
 
-            var trailRend = FindObjectOfType<ARCursor>().StrokePrefab.GetComponent<TrailRenderer>();
-            Material mat = new Material(trailRend.sharedMaterial)
-            {
-                mainTexture = texture
-            };
-            trailRend.material = mat;
-        }
+    public void OnStrokeColorChange(Color color)
+    {
+        lineRend.sharedMaterial = trailRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Material"));
+        lineRend.sharedMaterial.color = color;
+        StrokeColorImage.color = color;
+    }
+
+    public void TakeSnapshot()
+    {
+        var texture = ScreenCapture.CaptureScreenshotAsTexture();
+        NativeGallery.SaveImageToGallery(texture, "GARffiti snapshots", "snapshot");
     }
 }

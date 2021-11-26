@@ -17,7 +17,10 @@ public class ARCursor : MonoBehaviour
 
     void Start()
     {
-        //StrokePrefab.GetComponent<TrailRenderer>().sharedMaterial = Resources.Load<Material>("Materials/Stroke");
+        var lineRend = LinePrefab.GetComponent<LineRenderer>();
+        var trailRend = StrokePrefab.GetComponent<TrailRenderer>();
+        lineRend.sharedMaterial = trailRend.sharedMaterial = Resources.Load<Material>("Materials/Stroke Material");
+        lineRend.sharedMaterial.color = Color.white;
     }
 
     void Update()
