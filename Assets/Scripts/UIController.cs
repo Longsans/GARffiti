@@ -7,8 +7,9 @@ using NativeGalleryNamespace;
 
 public class UIController : MonoBehaviour
 {
+    public GameObject UIContainer;
     public Image DrawModeImage;
-    public GameObject StrokeWidthSlider;
+    public GameObject StrokeWidthSliderPanel;
     public Text StrokeWidthText;
     public GameObject StrokeColorPicker;
     public Image StrokeColorImage;
@@ -61,7 +62,7 @@ public class UIController : MonoBehaviour
 
     public void ToggleStrokeWidthSlider()
     {
-        StrokeWidthSlider.SetActive(!StrokeWidthSlider.activeInHierarchy);
+        StrokeWidthSliderPanel.SetActive(!StrokeWidthSliderPanel.activeInHierarchy);
     }
 
     public void OnStrokeWidthValueChange(float value)
@@ -86,7 +87,19 @@ public class UIController : MonoBehaviour
 
     public void TakeSnapshot()
     {
+        UIContainer.SetActive(false);
+        StartCoroutine(Snap());
+    }
+
+    IEnumerator Snap()
+    {
+        yield return new WaitForEndOfFrame();
+
         var texture = ScreenCapture.CaptureScreenshotAsTexture();
-        NativeGallery.SaveImageToGallery(texture, "GARffiti snapshots", "snapshot");
+        NativeGallery.SaveImageToGallery(texture, "GARffiti snapshots", "snapshot", (success, path) => {
+            UIContainer.SetActive(true);
+        });
+
+        Object.Destroy(texture);
     }
 }
