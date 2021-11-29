@@ -6,12 +6,15 @@ using UnityEngine.XR.ARFoundation;
 public class Line
 {
     private LineRenderer _lineRend;
+    private GameObject _gameObject;
+    public GameObject GameObject { get => _gameObject; }
 
     public Transform transform => _lineRend.transform;
 
     public Line(GameObject linePrefab, Vector3 position, ARPlane planeAttachedTo)
     {
-        _lineRend = ARCursor.Instantiate(linePrefab).GetComponent<LineRenderer>();
+        _gameObject = ARCursor.Instantiate(linePrefab);
+        _lineRend = _gameObject.GetComponent<LineRenderer>();
         _lineRend.positionCount = 0;
         AlignToPlane(planeAttachedTo);
         DrawTo(position);
