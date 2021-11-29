@@ -35,6 +35,9 @@ Some animations for panel group to slide in slide out
 BUtton have 2 stage if clicked it will change sprite 
 
 UI Note:
- - Smol button: 40 px 
+ - Smol button: 50 px 
  - Medium button: 100 px 
  - Big button: 200 px
+
+ Opacity: 200
+ Need new color picker, circular, eyes droplet shape when click (Modern look ass :v)
