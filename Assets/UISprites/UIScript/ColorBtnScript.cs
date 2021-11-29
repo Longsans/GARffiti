@@ -18,9 +18,12 @@ public class ColorBtnScript : BtnBase
         get => _isOpened;
         private set
         {
-            _isOpened = value;
-            Animator.SetBool(ShowParam, _isOpened);
-            Animator.SetTrigger(ChangeStateParam);
+            if (_isOpened != value)
+            {
+                _isOpened = value;
+                Animator.SetBool(ShowParam, _isOpened);
+                Animator.SetTrigger(ChangeStateParam);
+            }
         }
     }
 
@@ -47,7 +50,7 @@ public class ColorBtnScript : BtnBase
         Picker.onValueChanged.RemoveListener(OnColorChanged);
     }
 
-    protected override void Clicked()
+    public override void Clicked()
     {
         base.Clicked();
         IsOpened = !IsOpened;

@@ -25,7 +25,7 @@ public class BtnBase : MonoBehaviour
         _btns.Remove(this);
     }
 
-    protected virtual void Clicked()
+    public virtual void Clicked()
     {
         RaiseOtherButtonClickedEvent(this);
     }

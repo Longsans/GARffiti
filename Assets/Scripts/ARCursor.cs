@@ -3,39 +3,53 @@ using Assets.Scripts;
 
 public class ARCursor : MonoBehaviour
 {
-    public enum __DrawMode
+    public enum DrawModeType
     {
         PlanesOnly,
         SpaceOnly,
     }
 
-    public __DrawMode DrawMode;
+    private DrawModeType _drawMode;
+    public DrawModeType DrawMode 
+    {
+        get => _drawMode;
+        set
+        {
+            if (_drawMode != value)
+            {
+                _drawMode = value;
+                CreateDrawStrat();
+            }
+        }
+    }
+
     public GameObject StrokePrefab;
     public GameObject LinePrefab;
 
     private BaseDrawStrategy _drawStrategy;
 
-    void Start()
+    void Awake()
     {
-        var lineRend = LinePrefab.GetComponent<LineRenderer>();
-        var trailRend = StrokePrefab.GetComponent<TrailRenderer>();
-        lineRend.sharedMaterial = trailRend.sharedMaterial = Resources.Load<Material>("Materials/Stroke Material");
-        lineRend.sharedMaterial.color = Color.white;
+        Settings.ARCursor = this;
+        if (_drawStrategy == null)
+            CreateDrawStrat();
     }
 
     void Update()
     {
-        if (DrawMode == __DrawMode.PlanesOnly && _drawStrategy?.GetType() != typeof(PlaneDrawStrategy))
+        _drawStrategy.Draw();
+    }
+
+    private void CreateDrawStrat()
+    {
+        _drawStrategy?.Dispose();
+        if (DrawMode == DrawModeType.PlanesOnly)
         {
-            _drawStrategy?.Dispose();
             _drawStrategy = new PlaneDrawStrategy(this);
         }
-        else if (DrawMode == __DrawMode.SpaceOnly && _drawStrategy?.GetType() != typeof(SpaceDrawStrategy))
+        else if (DrawMode == DrawModeType.SpaceOnly)
         {
-            _drawStrategy?.Dispose();
             _drawStrategy = new SpaceDrawStrategy(this);
         }
-
-        _drawStrategy.Draw();
     }
 }
