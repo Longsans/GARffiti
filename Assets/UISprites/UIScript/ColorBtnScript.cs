@@ -33,7 +33,8 @@ public class ColorBtnScript : BtnBase
     {
         base.Awake();
         Animator = GetComponent<Animator>();
-        BackImage.color = Picker.CurrentColor;
+        Picker.CurrentColor = Settings.BrushColor;
+        BackImage.color = Settings.BrushColor;
     }
 
     public void OnColorChanged(Color newColor)

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public static class Settings
 {
-    private static Color _brushColor;
+    private static Color _brushColor = new Color(0.2f, 0.7f, 1);
     public static Color BrushColor 
     {
         get => _brushColor;
@@ -15,9 +15,6 @@ public static class Settings
                 return;
 
             _brushColor = value;
-            if (_lineRend != null)
-                _lineRend.sharedMaterial.color = value;
-
             onBrushColorChanged.Invoke(value);
         }
     }
@@ -32,9 +29,6 @@ public static class Settings
                 return;
 
             _brushWidth = value;
-            if (_lineRend != null && _trailRend != null)
-                _lineRend.widthMultiplier = _trailRend.widthMultiplier = value;
-
             onBrushWidthChanged.Invoke(value);
         }
     }
@@ -49,9 +43,6 @@ public static class Settings
                 return;
 
             _drawMode = value;
-            if (_arCursor != null)
-                _arCursor.DrawMode = value;
-
             onDrawModeChanged.Invoke(value);
         }
     }
@@ -66,27 +57,7 @@ public static class Settings
                 return;
 
             _texture = value;
-            CreateSharedMaterialForBrush();
             onTextureChanged.Invoke(value);
-        }
-    }
-
-    private static LineRenderer _lineRend;
-    private static TrailRenderer _trailRend;
-    private static ARCursor _arCursor;
-    public static ARCursor ARCursor 
-    {
-        get => _arCursor;
-        set
-        {
-            _arCursor = value;
-            if (_arCursor != null)
-            {
-                _arCursor.DrawMode = _drawMode;
-                _lineRend = _arCursor.LinePrefab.GetComponent<LineRenderer>();
-                _trailRend = _arCursor.StrokePrefab.GetComponent<TrailRenderer>();
-                CreateSharedMaterialForBrush();
-            }
         }
     }
 
@@ -103,18 +74,5 @@ public static class Settings
     private static void Load()
     {
 
-    }
-
-    private static void CreateSharedMaterialForBrush()
-    {
-        if (_texture != null)
-        {
-            _lineRend.sharedMaterial = _trailRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Std. Material"));
-            _lineRend.sharedMaterial.mainTexture = _texture;
-        }
-        else
-        {
-            _lineRend.sharedMaterial = _trailRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Material"));
-        }
     }
 }

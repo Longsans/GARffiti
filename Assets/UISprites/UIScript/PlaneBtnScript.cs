@@ -29,11 +29,11 @@ public class PlaneBtnScript : BtnBase
     {
         if (Settings.DrawMode == ARCursor.DrawModeType.SpaceOnly)
         {
-           Icon.sprite = Resources.Load<Sprite>("Icons/white-trap");
+            Icon.sprite = Resources.Load<Sprite>("Icons/3d-cube-white");
         }
         else
         {
-            Icon.sprite = Resources.Load<Sprite>("Icons/3d-cube-white");
+            Icon.sprite = Resources.Load<Sprite>("Icons/white-trap");
         }
     }
 }

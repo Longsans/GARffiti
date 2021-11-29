@@ -24,7 +24,12 @@ namespace Assets.Scripts
                 {
                     cursor.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, _distanceFromCamera));
                     if (touch.phase == TouchPhase.Began)
+                    {
                         stroke = ARCursor.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity, cursor.transform);
+
+                        // Send the newly created stroke down the event
+                        DrawPhaseStarted.Invoke(stroke);
+                    }
                 }
             }
             else cursor.transform.position = Camera.main.transform.position + _distanceFromCamera * Camera.main.transform.forward;

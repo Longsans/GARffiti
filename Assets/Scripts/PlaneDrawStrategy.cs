@@ -31,6 +31,9 @@ namespace Assets.Scripts
                         {
                             FocusOnPlane(_currentPlane);
                             _currentLine = new Line(cursor.LinePrefab, cursor.transform.position, (ARPlane)_currentPlane);
+
+                            // Send the newly created stroke down the event
+                            DrawPhaseStarted.Invoke(_currentLine.GameObject);
                         }
                         else
                             _currentLine.DrawTo(cursor.transform.position);
