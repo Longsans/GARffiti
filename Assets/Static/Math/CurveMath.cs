@@ -14,7 +14,13 @@ public static class CurveMath
         {
             points[i] = GeneralMath.GetMidPoint(points[i - 1], points[i + 1]);
         }
-        controlPoints = points;
+
+        controlPoints.Add(points[0]);
+        for (int i = 0; i < points.Count - 1; i++)
+        {
+            controlPoints.Add(GeneralMath.GetMidPoint(points[i], points[i + 1]));
+        }
+        controlPoints.Add(points[points.Count - 1]);
 
         for (int i = 0; i < controlPoints.Count - 3; i += 3)
         {
