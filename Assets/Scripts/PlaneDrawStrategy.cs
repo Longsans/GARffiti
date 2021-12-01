@@ -19,7 +19,7 @@ namespace Assets.Scripts
 
                 if (touch.phase == TouchPhase.Ended)
                 {
-                    if (Input.touchCount == 1) _currentLine = null;
+                    if (Input.touchCount == 1) _stroke = null;
                 }
                 else
                 {
@@ -30,13 +30,18 @@ namespace Assets.Scripts
                         if (touch.phase == TouchPhase.Began)
                         {
                             FocusOnPlane(_currentPlane);
-                            _currentLine = new Line(cursor.LinePrefab, cursor.transform.position, (ARPlane)_currentPlane);
+
+                            GameObject newBrushInstance = GameObject.Instantiate(cursor.LinePrefab, cursor.transform.position, Quaternion.identity);
+                            _stroke = new PlaneStroke(newBrushInstance, (ARPlane)_currentPlane);
+                            _stroke.DrawTo(cursor.transform.position);
 
                             // Send the newly created stroke down the event
-                            DrawPhaseStarted.Invoke(_currentLine.GameObject);
+                            DrawPhaseStarted.Invoke(_stroke);
                         }
                         else
-                            _currentLine.DrawTo(cursor.transform.position);
+                        {
+                            _stroke.DrawTo(cursor.transform.position);
+                        }
                     }
                 }
             }
@@ -100,8 +105,7 @@ namespace Assets.Scripts
         private ARTrackable _currentPlane;
         private ARRaycastManager _raycastManager;
         private ARPlaneManager _planeManager;
-        private Line _currentLine;
         private bool _planeDetected => _currentPlane != null;
-        private bool _drawing => _currentLine != null;
+        private bool _drawing => _stroke != null;
     }
 }
