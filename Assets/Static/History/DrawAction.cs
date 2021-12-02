@@ -4,18 +4,26 @@ using UnityEngine;
 
 public class DrawAction : Action
 {
-    public GameObject Brush;
-    public List<Vector2> Positions = new List<Vector2>();
-    public float StepDelta = 0.1f;
+    private Stroke _stroke;
+    public DrawAction(Stroke stroke)
+    {
+        _stroke = stroke;
+        File.AddStroke(stroke);
+    }
 
     public override void Redo()
     {
-        Brush.SetActive(true);
+        File.AddStroke(_stroke);
     }
 
     public override void Undo()
     {
-        Brush.SetActive(false);
-        TrailRenderer trailRenderer = new TrailRenderer();
+        File.RemoveStroke(_stroke);
+    }
+
+    public override void Remove()
+    {
+        _stroke.Dispose();
+        _stroke = null;
     }
 }

@@ -6,42 +6,20 @@ namespace Assets.Scripts
 {
     public class SpaceDrawStrategy : BaseDrawStrategy
     {
-        public override void Draw()
+        public override bool DrawStart(Vector2 cursorPos)
         {
-            if (Input.touchCount == 0)
-                return;
+            UpdateCursorPosition(cursorPos);
 
-            var touch = Input.GetTouch(0);
+            GameObject newBrushInstance = GameObject.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity);
+            _stroke = new SpaceStroke(newBrushInstance);
+            _stroke.StartDraw(cursor.transform.position);
 
-            // if player touched UI button then ignore
-            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                return;
+            return base.DrawStart(cursorPos);
+        }
 
-            if (touch.phase == TouchPhase.Ended)
-            {
-                if (Input.touchCount == 1)
-                {
-                    _stroke.Finished();
-                    _stroke = null;
-                }
-            }
-            else
-            {
-                cursor.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, _distanceFromCamera));
-                if (touch.phase == TouchPhase.Began)
-                {
-                    GameObject newBrushInstance = GameObject.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity);
-                    _stroke = new SpaceStroke(newBrushInstance);
-                    _stroke.DrawTo(cursor.transform.position);
-
-                    // Send the newly created stroke down the event
-                    DrawPhaseStarted.Invoke(_stroke);
-                }
-                else
-                {
-                    _stroke.DrawTo(cursor.transform.position);
-                }
-            }
+        protected override void UpdateCursorPosition(Vector2 position)
+        {
+            cursor.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, _distanceFromCamera));
         }
 
         public override void Dispose()

@@ -3,6 +3,9 @@ using Assets.Scripts;
 
 public class ARCursor : MonoBehaviour
 {
+    public static ARCursor Instance { get => _instance; }
+    private static ARCursor _instance;
+
     public enum DrawModeType
     {
         PlanesOnly,
@@ -31,16 +34,14 @@ public class ARCursor : MonoBehaviour
     private LineRenderer _lineRend;
 
     private Stroke _currentStroke;
-    public Stroke CurrentStroke { get => _currentStroke; }
+    public Stroke CurrentStroke { get => _currentStroke; set => _currentStroke = value; }
+
+    private bool _drawStarted = false;
 
     void Awake()
     {
         _lineRend = StrokePrefab.GetComponent<LineRenderer>();
-    }
-
-    void Update()
-    {
-        _drawStrategy.Draw();
+        _instance = this;
     }
 
     private void OnEnable()
@@ -117,5 +118,27 @@ public class ARCursor : MonoBehaviour
 
         _currentStroke = stroke;
         _currentStroke.SetMaterial(_lineRend.sharedMaterial);
+    }
+
+    public void StartDrawing(Vector2 cursorPosition)
+    {
+        _drawStarted = _drawStrategy.DrawStart(cursorPosition);
+    }
+
+    public void Drawing(Vector2 cursorPosition)
+    {
+        if (!_drawStarted)
+            return;
+
+        _drawStrategy.Draw(cursorPosition);
+    }
+
+    public void EndDrawing()
+    {
+        if (!_drawStarted)
+            return;
+
+        _drawStrategy.DrawEnd();
+        _drawStarted = false;
     }
 }

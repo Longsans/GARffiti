@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Stroke
+public abstract class Stroke : IDisposable
 {
     private LineRenderer _lineRend;
     public LineRenderer LineRenderer { get => _lineRend; }
@@ -23,6 +24,9 @@ public abstract class Stroke
 
     public float BezierStep { get; set; }
 
+    private Vector3[] _segment = new Vector3[3];
+    private int _currentSegmentIndex = 0;
+
     public Stroke(GameObject brushObject)
     {
         _gameObject = brushObject;
@@ -36,6 +40,11 @@ public abstract class Stroke
     public List<Vector3> GenerateBezierCurve(IEnumerable<Vector3> vector3s)
     {
         return null;
+    }
+
+    public virtual void StartDraw(Vector3 position)
+    {
+        DrawTo(position);
     }
 
     public virtual void DrawTo(Vector3 position)
@@ -53,6 +62,23 @@ public abstract class Stroke
         else
         {
             _lastPosition = position;
+
+            if (_currentSegmentIndex == _segment.Length)
+            {
+                _segment[_segment.Length - 1] = GeneralMath.GetMidPoint(_segment[_segment.Length - 1], position);
+                List<Vector3> newPoints = CurveMath.GenerateBezierCurveCasteljau(_segment, 0.1f);
+
+                _lineRend.positionCount -= _segment.Length;
+                for (int i = 0; i < newPoints.Count; i++)
+                {
+                    _lineRend.SetPosition(_lineRend.positionCount++, newPoints[i]);
+                }
+
+                _currentSegmentIndex = 0;
+            }
+
+            _segment[_currentSegmentIndex] = position;
+            _currentSegmentIndex++;
         }
         _lineRend.SetPosition(_lineRend.positionCount++, position);
     }
@@ -80,19 +106,33 @@ public abstract class Stroke
 
     public virtual void Finished()
     {
-        // Replace connect point with mid point
-        Vector3[] vectors = new Vector3[_lineRend.positionCount];
-        _lineRend.GetPositions(vectors);
-        _lineRend.positionCount = 0;
-
-        List<Vector3> newPoints = CurveMath.GenerateBezierCurve(vectors, 0.05f);
-
-        for (int i = 0; i < newPoints.Count; i++)
+        if (_currentSegmentIndex > 2)
         {
-            _lineRend.positionCount++;
-            _lineRend.SetPosition(i, newPoints[i]);
+            List<Vector3> newPoints = CurveMath.GenerateBezierCurveCasteljau(new List<Vector3>(_segment).GetRange(0, _currentSegmentIndex), 0.1f);
+            _lineRend.positionCount -= _currentSegmentIndex;
+            for (int i = 0; i < newPoints.Count; i++)
+            {
+                _lineRend.SetPosition(_lineRend.positionCount++, newPoints[i]);
+            }
         }
 
         // Save to history put here
+        DrawAction drawAction = new DrawAction(this);
+        History.AddAction(drawAction);
+    }
+
+    public void Hide()
+    {
+        _gameObject.SetActive(false);
+    }
+
+    public void Show()
+    {
+        _gameObject.SetActive(true);
+    }
+
+    public void Dispose()
+    {
+        GameObject.Destroy(_gameObject);
     }
 }
