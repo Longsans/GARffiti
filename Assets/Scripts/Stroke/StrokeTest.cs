@@ -14,7 +14,7 @@ public class StrokeTest : MonoBehaviour
     private void Start()
     {
         brush = GameObject.Instantiate(brushPrefab, transform.position, Quaternion.identity);
-        spaceStroke = new PlaneStroke(brush, null);
+        spaceStroke = new SpaceStroke(brush);
         oldPos = transform.position;
         spaceStroke.DrawTo(transform.position);
     }

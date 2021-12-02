@@ -19,7 +19,11 @@ namespace Assets.Scripts
 
                 if (touch.phase == TouchPhase.Ended)
                 {
-                    if (Input.touchCount == 1) _stroke = null;
+                    if (Input.touchCount == 1)
+                    {
+                        _stroke.Finished();
+                        _stroke = null;
+                    }
                 }
                 else
                 {
@@ -31,7 +35,7 @@ namespace Assets.Scripts
                         {
                             FocusOnPlane(_currentPlane);
 
-                            GameObject newBrushInstance = GameObject.Instantiate(cursor.LinePrefab, cursor.transform.position, Quaternion.identity);
+                            GameObject newBrushInstance = GameObject.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity);
                             _stroke = new PlaneStroke(newBrushInstance, (ARPlane)_currentPlane);
                             _stroke.DrawTo(cursor.transform.position);
 

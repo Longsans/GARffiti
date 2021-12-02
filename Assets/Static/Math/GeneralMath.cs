@@ -37,4 +37,10 @@ public static class GeneralMath
     {
         return (vec1 + vec2) / 2;
     }
+
+    public static Vector3 Lerp(Vector3 fromVec, Vector3 toVec, float time)
+    {
+        time = Mathf.Clamp01(time);
+        return fromVec + (toVec - fromVec) * time;
+    }
 }

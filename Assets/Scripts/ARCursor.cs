@@ -24,22 +24,18 @@ public class ARCursor : MonoBehaviour
     }
 
     public GameObject StrokePrefab;
-    public GameObject LinePrefab;
-
     public Material CurrentSharedMaterial { get => _lineRend.sharedMaterial; }
 
     private BaseDrawStrategy _drawStrategy = null;
 
     private LineRenderer _lineRend;
-    private TrailRenderer _trailRend;
 
     private Stroke _currentStroke;
     public Stroke CurrentStroke { get => _currentStroke; }
 
     void Awake()
     {
-        _lineRend = LinePrefab.GetComponent<LineRenderer>();
-        _trailRend = StrokePrefab.GetComponent<TrailRenderer>();
+        _lineRend = StrokePrefab.GetComponent<LineRenderer>();
     }
 
     void Update()
@@ -52,7 +48,7 @@ public class ARCursor : MonoBehaviour
         if (_lineRend.sharedMaterial != null)
             _lineRend.sharedMaterial.color = Settings.BrushColor;
 
-        _lineRend.widthMultiplier = _trailRend.widthMultiplier = Settings.BrushWidth;
+        _lineRend.widthMultiplier = Settings.BrushWidth;
 
         DrawMode = Settings.DrawMode;
         // In case the default material is the same as the setting at the start of the program it can be null
@@ -96,7 +92,7 @@ public class ARCursor : MonoBehaviour
 
     private void BrushWidthChanged(float width)
     {
-        _lineRend.widthMultiplier = _trailRend.widthMultiplier = width;
+        _lineRend.widthMultiplier = width;
         _currentStroke?.SetWidth(width);
     }
 
@@ -110,12 +106,12 @@ public class ARCursor : MonoBehaviour
         // This is to create new material for the prefabs so that the new brush doesn't share resource with the old one
         if (Settings.Texture)
         {
-            _lineRend.sharedMaterial = _trailRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Std. Material"));
+            _lineRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Std. Material"));
             _lineRend.sharedMaterial.mainTexture = Settings.Texture;
         }
         else
         {
-            _lineRend.sharedMaterial = _trailRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Material"));
+            _lineRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Material"));
             _lineRend.sharedMaterial.color = Settings.BrushColor;
         }
 
