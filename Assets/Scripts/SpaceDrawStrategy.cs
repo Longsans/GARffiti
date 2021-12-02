@@ -52,7 +52,7 @@ namespace Assets.Scripts
         public SpaceDrawStrategy(ARCursor arCursor) : base(arCursor)
         {
             ARCursor.FindObjectOfType<ARPlaneManager>().requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
-            _distanceFromCamera = 2.0f;
+            _distanceFromCamera = 4.0f;
         }
 
         private float _distanceFromCamera;
