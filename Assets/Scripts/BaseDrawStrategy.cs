@@ -7,7 +7,7 @@ namespace Assets.Scripts
     public abstract class BaseDrawStrategy : IDisposable
     {
         // Param is the brush instance created from prefabs
-        public UnityEvent<GameObject> DrawPhaseStarted = new UnityEvent<GameObject>();
+        public UnityEvent<Stroke> DrawPhaseStarted = new UnityEvent<Stroke>();
 
         public abstract void Draw();
         public abstract void Dispose();
@@ -31,7 +31,7 @@ namespace Assets.Scripts
             }
         }
 
-        protected GameObject stroke;
+        protected Stroke _stroke;
         protected ARCursor cursor;
     }
 }
