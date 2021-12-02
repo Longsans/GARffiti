@@ -8,8 +8,25 @@ namespace Assets.Scripts
     {
         // Param is the brush instance created from prefabs
         public UnityEvent<Stroke> DrawPhaseStarted = new UnityEvent<Stroke>();
+        public UnityEvent<Stroke> DrawPhaseEnded = new UnityEvent<Stroke>();
 
-        public abstract void Draw();
+        public virtual bool DrawStart(Vector2 cursorPos)
+        {
+            DrawPhaseStarted.Invoke(_stroke);
+            return true;
+        }
+        public virtual void Draw(Vector2 cursorPos)
+        {
+            UpdateCursorPosition(cursorPos);
+            _stroke.DrawTo(cursor.transform.position);
+        }
+        public virtual void DrawEnd()
+        {
+            _stroke?.Finished();
+            DrawPhaseEnded.Invoke(_stroke);
+            _stroke = null;
+        }
+
         public abstract void Dispose();
 
         public BaseDrawStrategy(ARCursor arCursor)
@@ -17,6 +34,7 @@ namespace Assets.Scripts
             cursor = arCursor;
         }
 
+        protected abstract void UpdateCursorPosition(Vector2 position);
         protected Material CreateMaterial()
         {
             if (Settings.Texture != null)

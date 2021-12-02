@@ -7,56 +7,30 @@ namespace Assets.Scripts
 {
     public class PlaneDrawStrategy : BaseDrawStrategy
     {
-        public override void Draw()
+        public override bool DrawStart(Vector2 cursorPos)
         {
-            if (_planeDetected && Input.touchCount > 0)
-            {
-                Touch touch = Input.GetTouch(0);
+            UpdateCursorPosition(cursorPos);
+            if (!_planeDetected)
+                return false;
 
-                // if player touched UI button then ignore
-                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                    return;
+            FocusOnPlane(_currentPlane);
 
-                if (touch.phase == TouchPhase.Ended)
-                {
-                    if (Input.touchCount == 1)
-                    {
-                        _stroke.Finished();
-                        _stroke = null;
-                    }
-                }
-                else
-                {
-                    UpdateCursorPosition(touch.position);
+            GameObject newBrushInstance = GameObject.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity);
+            _stroke = new PlaneStroke(newBrushInstance, (ARPlane)_currentPlane);
+            _stroke.StartDraw(cursor.transform.position);
 
-                    if (_planeDetected)
-                    {
-                        if (touch.phase == TouchPhase.Began)
-                        {
-                            FocusOnPlane(_currentPlane);
-
-                            GameObject newBrushInstance = GameObject.Instantiate(cursor.StrokePrefab, cursor.transform.position, Quaternion.identity);
-                            _stroke = new PlaneStroke(newBrushInstance, (ARPlane)_currentPlane);
-                            _stroke.DrawTo(cursor.transform.position);
-
-                            // Send the newly created stroke down the event
-                            DrawPhaseStarted.Invoke(_stroke);
-                        }
-                        else
-                        {
-                            _stroke.DrawTo(cursor.transform.position);
-                        }
-                    }
-                }
-            }
-            else if (Input.touchCount < 1)
-            {
-                UpdateCursorPosition(Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
-                FocusOnPlane(_currentPlane);
-            }
+            return base.DrawStart(cursorPos);
         }
 
-        private void UpdateCursorPosition(Vector2 touchPosition)
+        public override void DrawEnd()
+        {
+            UpdateCursorPosition(Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
+            FocusOnPlane(_currentPlane);
+
+            base.DrawEnd();
+        }
+
+        protected override void UpdateCursorPosition(Vector2 touchPosition)
         {
             var hits = RaycastFromScreen(touchPosition);
             if (hits.Count > 0)

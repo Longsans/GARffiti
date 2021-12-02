@@ -6,7 +6,7 @@ public static class History
 {
     private static List<Action> _actions = new List<Action>();
     private static List<Action> _redoActions = new List<Action>();
-    public static int MaxActionCount { get; set; } = 10;
+    public static int MaxActionCount = 10;
 
     public static void Undo()
     {
@@ -32,9 +32,16 @@ public static class History
     public static void AddAction(Action action)
     {
         _actions.Add(action);
+
+        foreach (Action redoAction in _redoActions)
+        {
+            redoAction.Remove();
+        }
         _redoActions.Clear();
+
         if (_actions.Count > MaxActionCount)
         {
+            _actions[0].Complete();
             _actions.RemoveAt(0);
         }
     }
