@@ -30,7 +30,7 @@ public abstract class Stroke
         _lineRend.positionCount = 0;
         _lineRend.sharedMaterial = Material;
 
-        MinDistance = 0.3f;
+        MinDistance = 0.05f;
     }
 
     public List<Vector3> GenerateBezierCurve(IEnumerable<Vector3> vector3s)
@@ -85,7 +85,7 @@ public abstract class Stroke
         _lineRend.GetPositions(vectors);
         _lineRend.positionCount = 0;
 
-        List<Vector3> newPoints = CurveMath.GenerateBezierCurve(vectors, 0.01f);
+        List<Vector3> newPoints = CurveMath.GenerateBezierCurve(vectors, 0.05f);
 
         for (int i = 0; i < newPoints.Count; i++)
         {
