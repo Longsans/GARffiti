@@ -37,12 +37,12 @@ public class UIController : MonoBehaviour
 
     public void TakeSnapshot()
     {
-        UIContainer.SetActive(false);
         StartCoroutine(Snap());
     }
 
     IEnumerator Snap()
     {
+        UIContainer.SetActive(false);
         yield return new WaitForEndOfFrame();
 
         var texture = ScreenCapture.CaptureScreenshotAsTexture();
