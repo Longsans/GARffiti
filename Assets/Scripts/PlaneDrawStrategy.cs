@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
         public override void DrawEnd()
         {
-            UpdateCursorPosition(Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
+            UpdateCursorPosition(ARCam.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
             FocusOnPlane(_currentPlane);
 
             base.DrawEnd();

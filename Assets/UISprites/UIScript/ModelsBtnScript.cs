@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ModelsBtnScript : BtnBase, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler
 {
-    public GameObject Canvas;
+    public GameObject Center;
     public GameObject[] ModelPrefabs;
 
+    public float PreviewRotationSpeed = 30;
+
+    public Vector2 BoundingRect;
+    public int UILayer = 5;
+
     private RectTransform _rectTransform;
-    private RectTransform _canvasTransform;
 
     private bool _placingModel = false;
-    private Vector2 _startLocation;
-    private const float _startPlacingMag = 0.5f;
+    private UIModelScript _previousModel = null;
 
     protected override void Awake()
     {
         base.Awake();
-        _canvasTransform = Canvas.GetComponent<RectTransform>();
         _rectTransform = gameObject.GetComponent<RectTransform>();
 
-        Settings.Selected3DModel = ModelPrefabs[0];
+        SelectModel(0);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -33,17 +35,12 @@ public class ModelsBtnScript : BtnBase, IPointerDownHandler, IPointerUpHandler, 
 
             if (canCalculate && !_rectTransform.rect.Contains(localPos))
             {
-                _placingModel = true;
-                ARCursor.Instance.DrawStrategy.PlacingStarted(eventData.position);
+                _placingModel = ARCursor.Instance.DrawStrategy.PlacingStarted(eventData.position);
             }
             return;
         }
 
         ARCursor.Instance.DrawStrategy.PlacingMove(eventData.position);
-    }
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        _startLocation = eventData.position;
     }
     public void OnPointerUp(PointerEventData eventData)
     {
@@ -52,5 +49,23 @@ public class ModelsBtnScript : BtnBase, IPointerDownHandler, IPointerUpHandler, 
             ARCursor.Instance.DrawStrategy.PlacingEnded();
         }
         _placingModel = false;
+    }
+
+    public void SelectModel(int index)
+    {
+        if (_previousModel != null)
+            GameObject.Destroy(_previousModel);
+
+        GameObject model = Instantiate(ModelPrefabs[index], Center.gameObject.transform);
+        model.transform.localPosition = new Vector3(0, 0, 0);
+
+        UIModelScript modelScript = model.GetComponent<UIModelScript>();
+        modelScript.Spinning = true;
+        modelScript.RotationSpeed = PreviewRotationSpeed;
+        modelScript.FitToSize(BoundingRect.x, BoundingRect.y);
+        modelScript.UseMidAnchor();
+
+        _previousModel = modelScript;
+        Settings.Selected3DModel = modelScript.ModelPrefab;
     }
 }

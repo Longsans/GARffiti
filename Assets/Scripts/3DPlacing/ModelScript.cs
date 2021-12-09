@@ -7,6 +7,7 @@ public class ModelScript : MonoBehaviour
 {
     public GameObject BottomAnchor;
     public GameObject MidAnchor;
+    public Vector2 MidPoint;
 
     public bool UsingBottomAnchor { get; private set; }
     public Vector3 Size { get; private set; }
@@ -20,7 +21,10 @@ public class ModelScript : MonoBehaviour
                 return;
 
             _sizeMultiplier = value;
-            this.gameObject.transform.localScale = new Vector3(value, value, 1);
+            if (UsingBottomAnchor)
+                this.BottomAnchor.transform.localScale = new Vector3(value, value, value);
+            else
+                this.MidAnchor.transform.localScale = new Vector3(value, value, value);
         }
     }
 
@@ -38,45 +42,49 @@ public class ModelScript : MonoBehaviour
         }
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         CalculateSize();
-        UseBottomAchor();
+        BottomAnchor.transform.parent = gameObject.transform.parent;
+        BottomAnchor.transform.localPosition = gameObject.transform.localPosition;
+        UsingBottomAnchor = true;
+        UseMidAnchor();
     }
 
-    public void UseBottomAchor()
+    public virtual void UseBottomAchor()
     {
         if (UsingBottomAnchor)
             return;
 
-        BottomAnchor.transform.parent = null;
+        BottomAnchor.transform.parent = MidAnchor.transform.parent;
+        BottomAnchor.transform.localPosition = MidAnchor.transform.localPosition;
         gameObject.transform.parent = null;
 
         MidAnchor.transform.parent = gameObject.transform;
-        MidAnchor.transform.position = new Vector3();
 
-        BottomAnchor.transform.position = gameObject.transform.position;
         gameObject.transform.parent = BottomAnchor.transform;
-        gameObject.transform.localPosition = new Vector3();
 
+        BottomAnchor.transform.localScale = new Vector3(_sizeMultiplier, _sizeMultiplier, 1);
+        gameObject.transform.localPosition = new Vector3(0, 0, 0);
         UsingBottomAnchor = true;
     }
 
-    public void UseMidAnchor()
+    public virtual void UseMidAnchor()
     {
         if (!UsingBottomAnchor)
             return;
 
-        MidAnchor.transform.parent = null;
+        MidAnchor.transform.parent = BottomAnchor.transform.parent;
+        MidAnchor.transform.localPosition = BottomAnchor.transform.localPosition;
+
         gameObject.transform.parent = null;
 
         BottomAnchor.transform.parent = gameObject.transform;
-        BottomAnchor.transform.localPosition = new Vector3(0, 0, 0);
 
-        MidAnchor.transform.position = gameObject.transform.position;
         gameObject.transform.parent = MidAnchor.transform;
-        gameObject.transform.localPosition = new Vector3(0, -Size.y / 2, 0);
 
+        MidAnchor.transform.localScale = new Vector3(_sizeMultiplier, _sizeMultiplier, 1);
+        gameObject.transform.localPosition = new Vector3(MidPoint.x, -MidPoint.y, 0);
         UsingBottomAnchor = false;
     }
 

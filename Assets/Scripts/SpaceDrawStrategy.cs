@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         protected override void UpdateCursorPosition(Vector2 position)
         {
-            cursor.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, _distanceFromCamera));
+            cursor.transform.position = ARCam.ScreenToWorldPoint(new Vector3(position.x, position.y, _distanceFromCamera));
         }
 
         public override void Dispose()

@@ -9,6 +9,7 @@ namespace Assets.Scripts
         // Param is the brush instance created from prefabs
         public UnityEvent<Stroke> DrawPhaseStarted = new UnityEvent<Stroke>();
         public UnityEvent<Stroke> DrawPhaseEnded = new UnityEvent<Stroke>();
+        public Camera ARCam;
 
         private bool _drawingStarted = false;
 

@@ -6,6 +6,8 @@ public class ARCursor : MonoBehaviour
     public static ARCursor Instance { get => _instance; }
     private static ARCursor _instance;
 
+    public Camera ARCam;
+
     public enum DrawModeType
     {
         PlanesOnly,
@@ -84,6 +86,7 @@ public class ARCursor : MonoBehaviour
         {
             _drawStrategy = new SpaceDrawStrategy(this);
         }
+        _drawStrategy.ARCam = ARCam;
         _drawStrategy.DrawPhaseStarted.AddListener(CreateSharedMaterialForBrush);
     }
 
