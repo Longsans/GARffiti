@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler
+public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointerDownHandler
 {
     public GameObject Center;
     public GameObject[] ModelPrefabs;
@@ -67,5 +67,10 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler
 
         _previousModel = modelScript;
         Settings.Selected3DModel = modelScript.ModelPrefab;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        throw new System.NotImplementedException();
     }
 }
