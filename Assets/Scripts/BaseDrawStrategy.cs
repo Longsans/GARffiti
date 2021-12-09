@@ -10,21 +10,32 @@ namespace Assets.Scripts
         public UnityEvent<Stroke> DrawPhaseStarted = new UnityEvent<Stroke>();
         public UnityEvent<Stroke> DrawPhaseEnded = new UnityEvent<Stroke>();
 
+        private bool _drawingStarted = false;
+
         public virtual bool DrawStart(Vector2 cursorPos)
         {
             DrawPhaseStarted.Invoke(_stroke);
-            return true;
+            _drawingStarted = true;
+            return _drawingStarted;
         }
         public virtual void Draw(Vector2 cursorPos)
         {
+            if (!_drawingStarted)
+                return;
+
             UpdateCursorPosition(cursorPos);
             _stroke.DrawTo(cursor.transform.position);
         }
         public virtual void DrawEnd()
         {
+            if (!_drawingStarted)
+                return;
+
             _stroke?.Finished();
             DrawPhaseEnded.Invoke(_stroke);
             _stroke = null;
+
+            _drawingStarted = false;
         }
 
         public abstract void Dispose();
