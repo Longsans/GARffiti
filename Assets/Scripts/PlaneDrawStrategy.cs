@@ -30,6 +30,18 @@ namespace Assets.Scripts
             base.DrawEnd();
         }
 
+        public override bool PlacingStarted(Vector2 cursorPos)
+        {
+            UpdateCursorPosition(cursorPos);
+            if (!_planeDetected)
+                return false;
+
+            base.PlacingStarted(cursorPos);
+            _modelScript?.UseBottomAchor();
+
+            return true;
+        }
+
         protected override void UpdateCursorPosition(Vector2 touchPosition)
         {
             var hits = RaycastFromScreen(touchPosition);

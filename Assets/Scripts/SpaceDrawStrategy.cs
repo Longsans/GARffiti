@@ -17,6 +17,16 @@ namespace Assets.Scripts
             return base.DrawStart(cursorPos);
         }
 
+        public override bool PlacingStarted(Vector2 cursorPos)
+        {
+            UpdateCursorPosition(cursorPos);
+
+            base.PlacingStarted(cursorPos);
+            _modelScript?.UseMidAnchor();
+
+            return true;
+        }
+
         protected override void UpdateCursorPosition(Vector2 position)
         {
             cursor.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, _distanceFromCamera));
@@ -30,7 +40,7 @@ namespace Assets.Scripts
         public SpaceDrawStrategy(ARCursor arCursor) : base(arCursor)
         {
             ARCursor.FindObjectOfType<ARPlaneManager>().requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
-            _distanceFromCamera = 4.0f;
+            _distanceFromCamera = 8.0f;
         }
 
         private float _distanceFromCamera;

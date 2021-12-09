@@ -12,6 +12,7 @@ namespace Assets.Scripts
 
         private bool _drawingStarted = false;
 
+        #region Drawing
         public virtual bool DrawStart(Vector2 cursorPos)
         {
             DrawPhaseStarted.Invoke(_stroke);
@@ -37,6 +38,36 @@ namespace Assets.Scripts
 
             _drawingStarted = false;
         }
+        #endregion
+
+        #region 3D model manipulation
+        public virtual bool PlacingStarted(Vector2 cursorPos)
+        {
+            _placingStarted = true;
+
+            GameObject newObj = GameObject.Instantiate(Settings.Selected3DModel, cursor.transform.position, Quaternion.identity);
+            _modelScript = newObj.GetComponent<ModelScript>();
+            _modelScript.MoveTo(cursor.transform.position);
+
+            return _placingStarted;
+        }
+        public virtual void PlacingMove(Vector2 cursorPos)
+        {
+            if (!_placingStarted)
+                return;
+
+            UpdateCursorPosition(cursorPos);
+            _modelScript.MoveTo(cursor.transform.position);
+        }
+        public virtual void PlacingEnded()
+        {
+            if (!_placingStarted)
+                return;
+
+            _modelScript = null;
+            _placingStarted = false;
+        }
+        #endregion
 
         public abstract void Dispose();
 
@@ -62,5 +93,7 @@ namespace Assets.Scripts
 
         protected Stroke _stroke;
         protected ARCursor cursor;
+        protected ModelScript _modelScript;
+        protected bool _placingStarted;
     }
 }
