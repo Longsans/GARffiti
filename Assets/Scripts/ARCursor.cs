@@ -36,10 +36,27 @@ public class ARCursor : MonoBehaviour
 
     private LineRenderer _lineRend;
 
-    private Stroke _currentStroke;
-    public Stroke CurrentStroke { get => _currentStroke; set => _currentStroke = value; }
+    private ModelScript _currentModelScript;
+    public ModelScript CurrentModelScript {
+        get => _currentModelScript;
+        set
+        {
+            _currentModelScript = value;
+            if (value != null)
+                _currentStroke = null;
+        }
+    }
 
-    private bool _drawStarted = false;
+    private Stroke _currentStroke;
+    public Stroke CurrentStroke { 
+        get => _currentStroke;
+        set
+        {
+            _currentStroke = value;
+            if (value != null)
+                _currentModelScript = null;
+        }
+    }
 
     void Awake()
     {
@@ -76,6 +93,7 @@ public class ARCursor : MonoBehaviour
         {
             _drawStrategy.Dispose();
             _drawStrategy.DrawPhaseStarted.RemoveListener(CreateSharedMaterialForBrush);
+            _drawStrategy.PlacingPhaseStarted.RemoveListener(PlacingPhaseStarted);
         }
 
         if (DrawMode == DrawModeType.PlanesOnly)
@@ -87,7 +105,9 @@ public class ARCursor : MonoBehaviour
             _drawStrategy = new SpaceDrawStrategy(this);
         }
         _drawStrategy.ARCam = ARCam;
+
         _drawStrategy.DrawPhaseStarted.AddListener(CreateSharedMaterialForBrush);
+        _drawStrategy.PlacingPhaseStarted.AddListener(PlacingPhaseStarted);
     }
 
     private void BrushColorChanged(Color color)
@@ -99,6 +119,8 @@ public class ARCursor : MonoBehaviour
     {
         _lineRend.widthMultiplier = width;
         _currentStroke?.SetWidth(width);
+        if (_currentModelScript != null)
+            _currentModelScript.SizeMultiplier = width;
     }
 
     private void DrawStratChanged(DrawModeType drawModeType)
@@ -108,6 +130,8 @@ public class ARCursor : MonoBehaviour
 
     private void CreateSharedMaterialForBrush(Stroke stroke)
     {
+        _currentModelScript = null;
+
         // This is to create new material for the prefabs so that the new brush doesn't share resource with the old one
         if (Settings.Texture)
         {
@@ -119,8 +143,10 @@ public class ARCursor : MonoBehaviour
             _lineRend.sharedMaterial = new Material(Resources.Load<Material>("Materials/Stroke Material"));
             _lineRend.sharedMaterial.color = Settings.BrushColor;
         }
+        stroke.SetMaterial(_lineRend.sharedMaterial);
+    }
 
-        _currentStroke = stroke;
-        _currentStroke.SetMaterial(_lineRend.sharedMaterial);
+    private void PlacingPhaseStarted(ModelScript modelScript)
+    {
     }
 }

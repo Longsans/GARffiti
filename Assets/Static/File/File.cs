@@ -10,6 +10,9 @@ public class File : MonoBehaviour
     private List<Stroke> _strokes = new List<Stroke>();
     public List<Stroke> Strokes { get => _strokes; }
 
+    private List<ModelScript> _modelScripts = new List<ModelScript>();
+    public List<ModelScript> ModelScripts { get => _modelScripts; }
+
     private void Awake()
     {
         _instance = this;
@@ -34,13 +37,32 @@ public class File : MonoBehaviour
         if (_instance._strokes.Remove(stroke))
         {
             stroke.Hide();
+            ARCursor.Instance.CurrentStroke = null;
+        }
+    }
 
-            if (strokes.Count > 0)
-            {
-                ARCursor.Instance.CurrentStroke = strokes[strokes.Count - 1];
-            }
+    public static void AddModel(ModelScript modelScript)
+    {
+        if (_instance._modelScripts.IndexOf(modelScript) < 0)
+        {
+            _instance._modelScripts.Add(modelScript);
+            modelScript.Show();
+            ARCursor.Instance.CurrentModelScript = modelScript;
+
+            if (modelScript.UsingBottomAnchor)
+                modelScript.BottomAnchor.transform.parent = _instance.gameObject.transform;
             else
-                ARCursor.Instance.CurrentStroke = null;
+                modelScript.MidAnchor.transform.parent = _instance.gameObject.transform;
+        }
+    }
+
+    public static void RemoveModel(ModelScript modelScript)
+    {
+        List<ModelScript> modelScripts = _instance._modelScripts;
+        if (_instance._modelScripts.Remove(modelScript))
+        {
+            ARCursor.Instance.CurrentModelScript = null;
+            modelScript.Hide();
         }
     }
 
@@ -53,6 +75,11 @@ public class File : MonoBehaviour
         _instance._strokes.Clear();
         ARCursor.Instance.CurrentStroke = null;
 
-        // Add action to history
+        foreach (ModelScript modelScript in _instance._modelScripts)
+        {
+            modelScript.Hide();
+        }
+        _instance._modelScripts.Clear();
+        ARCursor.Instance.CurrentModelScript = null;
     }
 }

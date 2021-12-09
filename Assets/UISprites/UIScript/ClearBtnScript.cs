@@ -6,7 +6,12 @@ public class ClearBtnScript : MonoBehaviour
 {
     public void ClearCanvas()
     {
-        ClearAction clearAction = new ClearAction();
+        ClearAction clearAction = new ClearAction(
+            File.Instance.Strokes.ToArray(), 
+            File.Instance.ModelScripts.ToArray(),
+            ARCursor.Instance.CurrentModelScript,
+            ARCursor.Instance.CurrentStroke
+            );
         History.AddAction(clearAction);
     }
 }

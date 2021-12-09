@@ -42,6 +42,30 @@ public class ModelScript : MonoBehaviour
         }
     }
 
+    public void Show()
+    {
+        if (UsingBottomAnchor)
+        {
+            BottomAnchor.SetActive(true);
+        }
+        else
+        {
+            MidAnchor.SetActive(true);
+        }
+    }
+
+    public void Hide()
+    {
+        if (UsingBottomAnchor)
+        {
+            BottomAnchor.SetActive(false);
+        }
+        else
+        {
+            MidAnchor.SetActive(false);
+        }
+    }
+
     protected virtual void Awake()
     {
         CalculateSize();
@@ -58,9 +82,12 @@ public class ModelScript : MonoBehaviour
 
         BottomAnchor.transform.parent = MidAnchor.transform.parent;
         BottomAnchor.transform.localPosition = MidAnchor.transform.localPosition;
+        BottomAnchor.SetActive(MidAnchor.activeSelf);
+
         gameObject.transform.parent = null;
 
         MidAnchor.transform.parent = gameObject.transform;
+        MidAnchor.SetActive(true);
 
         gameObject.transform.parent = BottomAnchor.transform;
 
@@ -76,10 +103,12 @@ public class ModelScript : MonoBehaviour
 
         MidAnchor.transform.parent = BottomAnchor.transform.parent;
         MidAnchor.transform.localPosition = BottomAnchor.transform.localPosition;
+        MidAnchor.SetActive(BottomAnchor.activeSelf);
 
         gameObject.transform.parent = null;
 
         BottomAnchor.transform.parent = gameObject.transform;
+        BottomAnchor.SetActive(true);
 
         gameObject.transform.parent = MidAnchor.transform;
 
@@ -140,5 +169,19 @@ public class ModelScript : MonoBehaviour
         }
 
         MidAnchor.transform.position = position;
+    }
+
+    public void Finish()
+    {
+        History.AddAction(new PlacingAction(this, ARCursor.Instance.CurrentModelScript, ARCursor.Instance.CurrentStroke));
+        ARCursor.Instance.CurrentModelScript = this;
+    }
+
+    public void Destory()
+    {
+        if (UsingBottomAnchor)
+            GameObject.Destroy(BottomAnchor);
+        else
+            GameObject.Destroy(MidAnchor);
     }
 }
