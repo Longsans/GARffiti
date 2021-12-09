@@ -116,8 +116,11 @@ public abstract class Stroke : IDisposable
             }
         }
 
+        // Have to call before store
+        ARCursor.Instance.CurrentStroke = this;
+
         // Save to history put here
-        DrawAction drawAction = new DrawAction(this);
+        DrawAction drawAction = new DrawAction(this, ARCursor.Instance.CurrentModelScript, ARCursor.Instance.CurrentStroke);
         History.AddAction(drawAction);
     }
 
