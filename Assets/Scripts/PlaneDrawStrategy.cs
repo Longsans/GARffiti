@@ -24,10 +24,22 @@ namespace Assets.Scripts
 
         public override void DrawEnd()
         {
-            UpdateCursorPosition(Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
+            UpdateCursorPosition(ARCam.ViewportToScreenPoint(new Vector3(0.5f, 0.5f)));
             FocusOnPlane(_currentPlane);
 
             base.DrawEnd();
+        }
+
+        public override bool PlacingStarted(Vector2 cursorPos)
+        {
+            UpdateCursorPosition(cursorPos);
+            if (!_planeDetected)
+                return false;
+
+            base.PlacingStarted(cursorPos);
+            _modelScript?.UseBottomAchor();
+
+            return true;
         }
 
         protected override void UpdateCursorPosition(Vector2 touchPosition)

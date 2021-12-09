@@ -6,6 +6,8 @@ public class ARCursor : MonoBehaviour
     public static ARCursor Instance { get => _instance; }
     private static ARCursor _instance;
 
+    public Camera ARCam;
+
     public enum DrawModeType
     {
         PlanesOnly,
@@ -30,6 +32,7 @@ public class ARCursor : MonoBehaviour
     public Material CurrentSharedMaterial { get => _lineRend.sharedMaterial; }
 
     private BaseDrawStrategy _drawStrategy = null;
+    public BaseDrawStrategy DrawStrategy { get => _drawStrategy; }
 
     private LineRenderer _lineRend;
 
@@ -83,6 +86,7 @@ public class ARCursor : MonoBehaviour
         {
             _drawStrategy = new SpaceDrawStrategy(this);
         }
+        _drawStrategy.ARCam = ARCam;
         _drawStrategy.DrawPhaseStarted.AddListener(CreateSharedMaterialForBrush);
     }
 
@@ -118,27 +122,5 @@ public class ARCursor : MonoBehaviour
 
         _currentStroke = stroke;
         _currentStroke.SetMaterial(_lineRend.sharedMaterial);
-    }
-
-    public void StartDrawing(Vector2 cursorPosition)
-    {
-        _drawStarted = _drawStrategy.DrawStart(cursorPosition);
-    }
-
-    public void Drawing(Vector2 cursorPosition)
-    {
-        if (!_drawStarted)
-            return;
-
-        _drawStrategy.Draw(cursorPosition);
-    }
-
-    public void EndDrawing()
-    {
-        if (!_drawStarted)
-            return;
-
-        _drawStrategy.DrawEnd();
-        _drawStarted = false;
     }
 }

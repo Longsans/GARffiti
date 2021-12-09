@@ -61,10 +61,26 @@ public static class Settings
         }
     }
 
+    private static GameObject _selected3DModel;
+    public static GameObject Selected3DModel
+    {
+        get => _selected3DModel;
+        set
+        {
+            if (value == _selected3DModel)
+                return;
+
+            _selected3DModel = value;
+            onSelected3DModelChanged.Invoke(value);
+        }
+    }
+
     public static UnityEvent<Texture2D> onTextureChanged = new UnityEvent<Texture2D>();
     public static UnityEvent<float> onBrushWidthChanged = new UnityEvent<float>();
     public static UnityEvent<Color> onBrushColorChanged = new UnityEvent<Color>();
     public static UnityEvent<ARCursor.DrawModeType> onDrawModeChanged = new UnityEvent<ARCursor.DrawModeType>();
+
+    public static UnityEvent<GameObject> onSelected3DModelChanged = new UnityEvent<GameObject>();
 
     static Settings()
     {
