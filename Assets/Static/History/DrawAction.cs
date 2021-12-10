@@ -5,7 +5,7 @@ using UnityEngine;
 public class DrawAction : CreateNewAction
 {
     private Stroke _stroke;
-    public DrawAction(Stroke stroke, ModelScript previousScript, Stroke previousStroke) : base(previousScript, previousStroke)
+    public DrawAction(Stroke stroke, Stroke previousStroke) : base(previousStroke)
     {
         _stroke = stroke;
         File.AddStroke(stroke);

@@ -8,12 +8,15 @@ public class ModelScript : MonoBehaviour
     public GameObject BottomAnchor;
     public GameObject MidAnchor;
     public Vector2 MidPoint;
+    public Vector2 BottomPoint;
 
     public GameObject EditPanel;
+    public bool AutoCalculateSize = false;
 
     public bool UsingBottomAnchor { get; private set; }
-    public Vector3 Size { get; private set; }
+    public Vector3 Size;
     private Vector3 instanceRot;
+
 
     private float _sizeMultiplier = 1;
     public float SizeMultiplier { 
@@ -71,7 +74,8 @@ public class ModelScript : MonoBehaviour
 
     protected virtual void Awake()
     {
-        CalculateSize();
+        if (AutoCalculateSize)
+            CalculateSize();
         BottomAnchor.transform.parent = gameObject.transform.parent;
         BottomAnchor.transform.localPosition = gameObject.transform.localPosition;
         UsingBottomAnchor = true;
@@ -95,8 +99,8 @@ public class ModelScript : MonoBehaviour
 
         gameObject.transform.parent = BottomAnchor.transform;
 
-        BottomAnchor.transform.localScale = new Vector3(_sizeMultiplier, _sizeMultiplier, 1);
-        gameObject.transform.localPosition = new Vector3(0, 0, 0);
+        BottomAnchor.transform.localScale = new Vector3(_sizeMultiplier, _sizeMultiplier, _sizeMultiplier);
+        gameObject.transform.localPosition = new Vector3(BottomPoint.x, -BottomPoint.y, 0);
         UsingBottomAnchor = true;
     }
 
@@ -116,7 +120,7 @@ public class ModelScript : MonoBehaviour
 
         gameObject.transform.parent = MidAnchor.transform;
 
-        MidAnchor.transform.localScale = new Vector3(_sizeMultiplier, _sizeMultiplier, 1);
+        MidAnchor.transform.localScale = new Vector3(_sizeMultiplier, _sizeMultiplier, _sizeMultiplier);
         gameObject.transform.localPosition = new Vector3(MidPoint.x, -MidPoint.y, 0);
         UsingBottomAnchor = false;
     }
@@ -175,9 +179,20 @@ public class ModelScript : MonoBehaviour
         MidAnchor.transform.position = position;
     }
 
+    public void MoveToLocal(Vector3 position)
+    {
+        if (UsingBottomAnchor)
+        {
+            BottomAnchor.transform.localPosition = position;
+            return;
+        }
+
+        MidAnchor.transform.localPosition = position;
+    }
+
     public void OnSizeChanged(float scaleFactor)
     {
-        transform.localScale = scaleFactor * Vector3.one;
+        SizeMultiplier = scaleFactor;
         CalculateSize();
     }
 
@@ -204,8 +219,7 @@ public class ModelScript : MonoBehaviour
 
     public void Finish()
     {
-        History.AddAction(new PlacingAction(this, ARCursor.Instance.CurrentModelScript, ARCursor.Instance.CurrentStroke));
-        ARCursor.Instance.CurrentModelScript = this;
+        History.AddAction(new PlacingAction(this));
     }
 
     public void Destory()

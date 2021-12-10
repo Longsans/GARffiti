@@ -297,6 +297,10 @@ MonoBehaviour:
   BottomAnchor: {fileID: 7993038491246284935}
   MidAnchor: {fileID: 7993038491577103413}
   MidPoint: {x: 0, y: 0.5}
+  BottomPoint: {x: 0, y: 0}
+  EditPanel: {fileID: 0}
+  AutoCalculateSize: 1
+  Size: {x: 2.3, y: 1.7, z: 2.3}
 --- !u!65 &2049233411655155124
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -308,8 +312,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.1490445, y: 1.4987396, z: 2.1766725}
-  m_Center: {x: -0.015133619, y: 0.69482607, z: -0.014106274}
+  m_Size: {x: 2.3, y: 1.7, z: 2.3}
+  m_Center: {x: -0.015133619, y: 0.8, z: -0.014106274}
 --- !u!1 &7843181598497330734
 GameObject:
   m_ObjectHideFlags: 0

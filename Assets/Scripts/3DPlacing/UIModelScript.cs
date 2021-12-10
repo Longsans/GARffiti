@@ -25,11 +25,13 @@ public class UIModelScript : ModelScript
 
     public void FitToSize(float width, float height)
     {
-        float ratioW = Size.x * 100 / width;
-        float ratioH = Size.y * 100 / height;
+        float ratioW = width  / (Size.x);
+        float ratioH = height / (Size.y);
+        float ratioD = width / (Size.z);
 
-        float ratio = ratioH > ratioW ? ratioH : ratioW;
-        SizeMultiplier = 1 / ratio;
+        float ratio = Mathf.Min(ratioW, ratioH, ratioD);
+
+        SizeMultiplier = ratio;
     }
 
     public override void UseMidAnchor()

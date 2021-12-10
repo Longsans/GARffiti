@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlacingAction : CreateNewAction
+public class PlacingAction : Action
 {
     private ModelScript _modelScript;
 
-    public PlacingAction(ModelScript modelScript, ModelScript previousScript, Stroke previousStroke) : base(previousScript, previousStroke)
+    public PlacingAction(ModelScript modelScript) : base()
     {
         _modelScript = modelScript;
         File.AddModel(modelScript);
@@ -15,13 +15,11 @@ public class PlacingAction : CreateNewAction
     public override void Redo()
     {
         File.AddModel(_modelScript);
-        ARCursor.Instance.CurrentModelScript = _modelScript;
     }
 
     public override void Undo()
     {
         File.RemoveModel(_modelScript);
-        base.Undo();
     }
 
     public override void Remove()

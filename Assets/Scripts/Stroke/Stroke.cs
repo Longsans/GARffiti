@@ -120,7 +120,7 @@ public abstract class Stroke : IDisposable
         ARCursor.Instance.CurrentStroke = this;
 
         // Save to history put here
-        DrawAction drawAction = new DrawAction(this, ARCursor.Instance.CurrentModelScript, ARCursor.Instance.CurrentStroke);
+        DrawAction drawAction = new DrawAction(this, ARCursor.Instance.CurrentStroke);
         History.AddAction(drawAction);
     }
 

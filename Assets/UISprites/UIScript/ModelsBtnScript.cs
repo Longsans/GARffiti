@@ -18,6 +18,8 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
     private bool _placingModel = false;
     private UIModelScript _previousModel = null;
 
+    private int _currentIndex = 0;
+
     protected override void Awake()
     {
         base.Awake();
@@ -53,20 +55,36 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
 
     public void SelectModel(int index)
     {
-        if (_previousModel != null)
-            GameObject.Destroy(_previousModel);
+        _previousModel?.Destory();
 
         GameObject model = Instantiate(ModelPrefabs[index], Center.gameObject.transform);
-        model.transform.localPosition = new Vector3(0, 0, 0);
 
         UIModelScript modelScript = model.GetComponent<UIModelScript>();
         modelScript.Spinning = true;
         modelScript.RotationSpeed = PreviewRotationSpeed;
         modelScript.FitToSize(BoundingRect.x, BoundingRect.y);
         modelScript.UseMidAnchor();
+        modelScript.MoveToLocal(new Vector3(0, 0, -Mathf.Max(modelScript.Size.x, modelScript.Size.z) * modelScript.SizeMultiplier));
 
         _previousModel = modelScript;
         Settings.Selected3DModel = modelScript.ModelPrefab;
+    }
+
+    public void SelectNextModel()
+    {
+        _currentIndex++;
+        _currentIndex %= ModelPrefabs.Length;
+
+        SelectModel(_currentIndex);
+    }
+
+    public void SelectPreviousModel()
+    {
+        _currentIndex--;
+        if (_currentIndex < 0)
+            _currentIndex = ModelPrefabs.Length - 1;
+
+        SelectModel(_currentIndex);
     }
 
     public void OnPointerDown(PointerEventData eventData)

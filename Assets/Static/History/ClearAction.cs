@@ -8,7 +8,7 @@ public class ClearAction : CreateNewAction
     IEnumerable<ModelScript> _modelScripts;
     
 
-    public ClearAction(IEnumerable<Stroke> strokes, IEnumerable<ModelScript> modelScripts, ModelScript previousModel, Stroke previousStroke) : base(previousModel, previousStroke)
+    public ClearAction(IEnumerable<Stroke> strokes, IEnumerable<ModelScript> modelScripts, Stroke previousStroke) : base(previousStroke)
     {
         _strokes = strokes;
         _modelScripts = modelScripts;
@@ -32,7 +32,6 @@ public class ClearAction : CreateNewAction
             File.AddModel(modelScript);
         }
 
-        ARCursor.Instance.CurrentModelScript = _previousModelScript;
         ARCursor.Instance.CurrentStroke = _previousStroke;
     }
 
