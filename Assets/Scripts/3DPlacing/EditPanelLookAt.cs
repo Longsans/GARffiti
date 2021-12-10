@@ -12,11 +12,13 @@ public class EditPanelLookAt : MonoBehaviour
     void Update()
     {
         model ??= lookAt.GetComponent<ModelScript>();
-        offset = (model.Size.y + 0.25f) * Vector3.up;
+        offset = (model.UsingBottomAnchor ? model.Size.y : model.Size.y / 2f + model.Size.y / 3f) * Vector3.up;
         var position = cam.WorldToScreenPoint(lookAt.position + offset);
         var rect = GetComponent<RectTransform>();
+        
         if (position != rect.anchoredPosition3D)
         {
+            Debug.Log($"model: {model.Size.y}");
             rect.anchoredPosition3D = position;
         }
     }

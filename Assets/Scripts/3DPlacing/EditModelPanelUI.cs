@@ -23,6 +23,6 @@ public class EditModelPanelUI : BtnBase
 
     protected override void OtherButtonClicked(BtnBase clickingBtn)
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

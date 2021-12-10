@@ -9,6 +9,9 @@ namespace Assets.Scripts
         // Param is the brush instance created from prefabs
         public UnityEvent<Stroke> DrawPhaseStarted = new UnityEvent<Stroke>();
         public UnityEvent<Stroke> DrawPhaseEnded = new UnityEvent<Stroke>();
+
+        public UnityEvent<ModelScript> PlacingPhaseStarted = new UnityEvent<ModelScript>();
+
         public Camera ARCam;
 
         private bool _drawingStarted = false;
@@ -18,6 +21,8 @@ namespace Assets.Scripts
         {
             DrawPhaseStarted.Invoke(_stroke);
             _drawingStarted = true;
+            _modelScript = null;
+
             return _drawingStarted;
         }
         public virtual void Draw(Vector2 cursorPos)
@@ -50,10 +55,13 @@ namespace Assets.Scripts
             {
                 GameObject newObj = GameObject.Instantiate(Settings.Selected3DModel, cursor.transform.position, Quaternion.identity);
                 _modelScript = newObj.GetComponent<ModelScript>();
+                _modelScript.SizeMultiplier = Settings.BrushWidth;
+                _modelScript.CalculateSize();
             }
             else _modelScript = model;
-            _modelScript.MoveTo(cursor.transform.position);
 
+            _modelScript.MoveTo(cursor.transform.position);
+            PlacingPhaseStarted.Invoke(_modelScript);
             return _placingStarted;
         }
         public virtual void PlacingMove(Vector2 cursorPos)
@@ -69,8 +77,8 @@ namespace Assets.Scripts
             if (!_placingStarted)
                 return;
 
-            _modelScript = null;
             _placingStarted = false;
+            _modelScript.Finish();
         }
         #endregion
 
@@ -98,7 +106,10 @@ namespace Assets.Scripts
 
         protected Stroke _stroke;
         protected ARCursor cursor;
+
         protected ModelScript _modelScript;
+        public ModelScript ModelScript { get => _modelScript; }
+
         protected bool _placingStarted;
     }
 }

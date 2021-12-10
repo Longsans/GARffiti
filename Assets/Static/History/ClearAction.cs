@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearAction : Action
+public class ClearAction : CreateNewAction
 {
     IEnumerable<Stroke> _strokes;
-    public ClearAction()
+    IEnumerable<ModelScript> _modelScripts;
+    
+
+    public ClearAction(IEnumerable<Stroke> strokes, IEnumerable<ModelScript> modelScripts, ModelScript previousModel, Stroke previousStroke) : base(previousModel, previousStroke)
     {
-        _strokes = File.Instance.Strokes.ToArray();
+        _strokes = strokes;
+        _modelScripts = modelScripts;
         File.Clear();
     }
 
@@ -22,6 +26,14 @@ public class ClearAction : Action
         {
             File.AddStroke(stroke);
         }
+
+        foreach (ModelScript modelScript in _modelScripts)
+        {
+            File.AddModel(modelScript);
+        }
+
+        ARCursor.Instance.CurrentModelScript = _previousModelScript;
+        ARCursor.Instance.CurrentStroke = _previousStroke;
     }
 
     public override void Complete()

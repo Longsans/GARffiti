@@ -71,6 +71,6 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        // this function is needed even if it's empty
     }
 }

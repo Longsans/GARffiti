@@ -47,6 +47,8 @@ namespace Assets.Scripts._3DPlacing
                     lookAt.cam = ARCamera;
                     _model.EditPanel = editPanel;
                 }
+                else _model.EditPanel.gameObject.SetActive(true);
+
                 _dragging = true;
                 ARCursor.Instance.DrawStrategy.PlacingStarted(eventData.position, _model);
             }

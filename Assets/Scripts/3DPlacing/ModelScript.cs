@@ -25,9 +25,9 @@ public class ModelScript : MonoBehaviour
 
             _sizeMultiplier = value;
             if (UsingBottomAnchor)
-                this.BottomAnchor.transform.localScale = new Vector3(value, value, value);
+                this.BottomAnchor.transform.localScale = value * Vector3.one;
             else
-                this.MidAnchor.transform.localScale = new Vector3(value, value, value);
+                this.MidAnchor.transform.localScale = value * Vector3.one;
         }
     }
 
@@ -42,6 +42,30 @@ public class ModelScript : MonoBehaviour
 
             _rotation = value;
             this.gameObject.transform.eulerAngles = new Vector3(0, value, 0);
+        }
+    }
+
+    public void Show()
+    {
+        if (UsingBottomAnchor)
+        {
+            BottomAnchor.SetActive(true);
+        }
+        else
+        {
+            MidAnchor.SetActive(true);
+        }
+    }
+
+    public void Hide()
+    {
+        if (UsingBottomAnchor)
+        {
+            BottomAnchor.SetActive(false);
+        }
+        else
+        {
+            MidAnchor.SetActive(false);
         }
     }
 
@@ -62,9 +86,12 @@ public class ModelScript : MonoBehaviour
 
         BottomAnchor.transform.parent = MidAnchor.transform.parent;
         BottomAnchor.transform.localPosition = MidAnchor.transform.localPosition;
+        BottomAnchor.SetActive(MidAnchor.activeSelf);
+
         gameObject.transform.parent = null;
 
         MidAnchor.transform.parent = gameObject.transform;
+        MidAnchor.SetActive(true);
 
         gameObject.transform.parent = BottomAnchor.transform;
 
@@ -80,10 +107,12 @@ public class ModelScript : MonoBehaviour
 
         MidAnchor.transform.parent = BottomAnchor.transform.parent;
         MidAnchor.transform.localPosition = BottomAnchor.transform.localPosition;
+        MidAnchor.SetActive(BottomAnchor.activeSelf);
 
         gameObject.transform.parent = null;
 
         BottomAnchor.transform.parent = gameObject.transform;
+        BottomAnchor.SetActive(true);
 
         gameObject.transform.parent = MidAnchor.transform;
 
@@ -171,5 +200,19 @@ public class ModelScript : MonoBehaviour
         transform.eulerAngles = new Vector3(instanceRot.x, instanceRot.y, z);
         instanceRot.z = z;
         CalculateSize();
+    }
+
+    public void Finish()
+    {
+        History.AddAction(new PlacingAction(this, ARCursor.Instance.CurrentModelScript, ARCursor.Instance.CurrentStroke));
+        ARCursor.Instance.CurrentModelScript = this;
+    }
+
+    public void Destory()
+    {
+        if (UsingBottomAnchor)
+            GameObject.Destroy(BottomAnchor);
+        else
+            GameObject.Destroy(MidAnchor);
     }
 }
