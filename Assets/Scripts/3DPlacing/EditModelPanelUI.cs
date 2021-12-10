@@ -42,4 +42,18 @@ public class EditModelPanelUI : BtnBase
     {
         gameObject.SetActive(false);
     }
+
+    private void OnEnable()
+    {
+        if (EditModelCanvas.LastPanel != null && EditModelCanvas.LastPanel != this)
+            EditModelCanvas.LastPanel.gameObject.SetActive(false);
+
+        EditModelCanvas.LastPanel = this;
+    }
+
+    private void OnDisable()
+    {
+        if (EditModelCanvas.LastPanel == this)
+            EditModelCanvas.LastPanel = null;
+    }
 }

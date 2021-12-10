@@ -18,7 +18,7 @@ MonoBehaviour:
   BottomPoint: {x: 0, y: -0.217}
   EditPanel: {fileID: 0}
   AutoCalculateSize: 0
-  Size: {x: 0.3, y: 0.45, z: 1.3}
+  Size: {x: 2.6, y: 0.9, z: 0.35}
   RotationSpeed: 30
   ModelPrefab: {fileID: 5571970767398840185, guid: bfddc52cdb9694641ae90d0ad1348b03,
     type: 3}
@@ -112,6 +112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5571970767398839431, guid: bfddc52cdb9694641ae90d0ad1348b03, type: 3}
+    - {fileID: 5571970767398839428, guid: bfddc52cdb9694641ae90d0ad1348b03, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bfddc52cdb9694641ae90d0ad1348b03, type: 3}
 --- !u!1 &2388265580561693088 stripped
 GameObject:

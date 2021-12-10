@@ -15,6 +15,7 @@ namespace Assets.Scripts
         public Camera ARCam;
 
         private bool _drawingStarted = false;
+        public const float DefaultModelSize = 1f;
 
         #region Drawing
         public virtual bool DrawStart(Vector2 cursorPos)
@@ -55,7 +56,7 @@ namespace Assets.Scripts
             {
                 GameObject newObj = GameObject.Instantiate(Settings.Selected3DModel, cursor.transform.position, Quaternion.identity);
                 _modelScript = newObj.GetComponent<ModelScript>();
-                _modelScript.SizeMultiplier = Settings.BrushWidth;
+                _modelScript.SizeMultiplier = DefaultModelSize;
                 _modelScript.CalculateSize();
             }
             else _modelScript = model;
