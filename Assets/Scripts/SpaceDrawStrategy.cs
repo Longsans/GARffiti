@@ -17,11 +17,11 @@ namespace Assets.Scripts
             return base.DrawStart(cursorPos);
         }
 
-        public override bool PlacingStarted(Vector2 cursorPos)
+        public override bool PlacingStarted(Vector2 cursorPos, ModelScript model = null)
         {
             UpdateCursorPosition(cursorPos);
 
-            base.PlacingStarted(cursorPos);
+            base.PlacingStarted(cursorPos, model);
             _modelScript?.UseMidAnchor();
 
             return true;

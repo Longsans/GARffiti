@@ -47,15 +47,20 @@ namespace Assets.Scripts
         #endregion
 
         #region 3D model manipulation
-        public virtual bool PlacingStarted(Vector2 cursorPos)
+        public virtual bool PlacingStarted(Vector2 cursorPos, ModelScript model = null)
         {
             _placingStarted = true;
 
-            GameObject newObj = GameObject.Instantiate(Settings.Selected3DModel, cursor.transform.position, Quaternion.identity);
-            _modelScript = newObj.GetComponent<ModelScript>();
-            _modelScript.MoveTo(cursor.transform.position);
-            _modelScript.SizeMultiplier = Settings.BrushWidth;
+            if (model == null)
+            {
+                GameObject newObj = GameObject.Instantiate(Settings.Selected3DModel, cursor.transform.position, Quaternion.identity);
+                _modelScript = newObj.GetComponent<ModelScript>();
+                _modelScript.SizeMultiplier = Settings.BrushWidth;
+                _modelScript.CalculateSize();
+            }
+            else _modelScript = model;
 
+            _modelScript.MoveTo(cursor.transform.position);
             PlacingPhaseStarted.Invoke(_modelScript);
             return _placingStarted;
         }

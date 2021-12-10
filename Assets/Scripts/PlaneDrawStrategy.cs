@@ -30,13 +30,13 @@ namespace Assets.Scripts
             base.DrawEnd();
         }
 
-        public override bool PlacingStarted(Vector2 cursorPos)
+        public override bool PlacingStarted(Vector2 cursorPos, ModelScript model = null)
         {
             UpdateCursorPosition(cursorPos);
             if (!_planeDetected)
                 return false;
 
-            base.PlacingStarted(cursorPos);
+            base.PlacingStarted(cursorPos, model);
             _modelScript?.UseBottomAchor();
 
             return true;
