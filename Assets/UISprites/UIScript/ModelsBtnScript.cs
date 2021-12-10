@@ -18,6 +18,8 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
     private bool _placingModel = false;
     private UIModelScript _previousModel = null;
 
+    private int _currentIndex = 0;
+
     protected override void Awake()
     {
         base.Awake();
@@ -67,6 +69,23 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
 
         _previousModel = modelScript;
         Settings.Selected3DModel = modelScript.ModelPrefab;
+    }
+
+    public void SelectNextModel()
+    {
+        _currentIndex++;
+        _currentIndex %= ModelPrefabs.Length;
+
+        SelectModel(_currentIndex);
+    }
+
+    public void SelectPreviousModel()
+    {
+        _currentIndex--;
+        if (_currentIndex < 0)
+            _currentIndex = ModelPrefabs.Length - 1;
+
+        SelectModel(_currentIndex);
     }
 
     public void OnPointerDown(PointerEventData eventData)
