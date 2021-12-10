@@ -17,6 +17,9 @@ public class ModelScript : MonoBehaviour
     public Vector3 Size;
     private Vector3 instanceRot;
 
+    // Will be record when finish
+    private Vector3 _lastPosition;
+    private bool _finished = false;
 
     private float _sizeMultiplier = 1;
     public float SizeMultiplier { 
@@ -45,6 +48,17 @@ public class ModelScript : MonoBehaviour
 
             _rotation = value;
             this.gameObject.transform.eulerAngles = new Vector3(0, value, 0);
+        }
+    }
+
+    public Vector3 Location
+    { 
+        get
+        {
+            if (UsingBottomAnchor)
+                return BottomAnchor.transform.position;
+            else
+                return MidAnchor.transform.position;
         }
     }
 
@@ -219,7 +233,15 @@ public class ModelScript : MonoBehaviour
 
     public void Finish()
     {
-        History.AddAction(new PlacingAction(this));
+        if (_finished)
+            History.AddAction(new RelocateAction(this, _lastPosition, Location));
+        else
+        {
+            History.AddAction(new PlacingAction(this));
+            _finished = true;
+        }
+
+        _lastPosition = gameObject.transform.position;
     }
 
     public void Destory()

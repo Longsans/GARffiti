@@ -15,7 +15,7 @@ namespace Assets.Scripts
         public Camera ARCam;
 
         private bool _drawingStarted = false;
-        public const float DefaultModelSize = 1f;
+        public const float DefaultModelSize = 0.75f;
 
         #region Drawing
         public virtual bool DrawStart(Vector2 cursorPos)
