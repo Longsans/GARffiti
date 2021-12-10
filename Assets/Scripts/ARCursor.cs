@@ -36,25 +36,12 @@ public class ARCursor : MonoBehaviour
 
     private LineRenderer _lineRend;
 
-    private ModelScript _currentModelScript;
-    public ModelScript CurrentModelScript {
-        get => _currentModelScript;
-        set
-        {
-            _currentModelScript = value;
-            if (value != null)
-                _currentStroke = null;
-        }
-    }
-
     private Stroke _currentStroke;
     public Stroke CurrentStroke { 
         get => _currentStroke;
         set
         {
             _currentStroke = value;
-            if (value != null)
-                _currentModelScript = null;
         }
     }
 
@@ -119,8 +106,6 @@ public class ARCursor : MonoBehaviour
     {
         _lineRend.widthMultiplier = width;
         _currentStroke?.SetWidth(width);
-        if (_currentModelScript != null)
-            _currentModelScript.SizeMultiplier = width;
     }
 
     private void DrawStratChanged(DrawModeType drawModeType)
@@ -130,8 +115,6 @@ public class ARCursor : MonoBehaviour
 
     private void CreateSharedMaterialForBrush(Stroke stroke)
     {
-        _currentModelScript = null;
-
         // This is to create new material for the prefabs so that the new brush doesn't share resource with the old one
         if (Settings.Texture)
         {

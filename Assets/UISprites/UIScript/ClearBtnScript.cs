@@ -9,7 +9,6 @@ public class ClearBtnScript : MonoBehaviour
         ClearAction clearAction = new ClearAction(
             File.Instance.Strokes.ToArray(), 
             File.Instance.ModelScripts.ToArray(),
-            ARCursor.Instance.CurrentModelScript,
             ARCursor.Instance.CurrentStroke
             );
         History.AddAction(clearAction);

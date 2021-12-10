@@ -3,10 +3,35 @@ guid: afff9a6901d1c0c459a145830a79987b
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material #11111
+    second: {fileID: 2100000, guid: 4bfc4e6fc3954e24386fcc7005fba5c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material #333
+    second: {fileID: 2100000, guid: d6371eece0eb2084598375480e725f6a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: drow 1
+    second: {fileID: 2100000, guid: 2a27b095f1a8912499b2509085b2bcb9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: drow 3
+    second: {fileID: 2100000, guid: 1216b9d5d3730e04980d42c9631b6bc3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: drow2
+    second: {fileID: 2100000, guid: 5dbda86f0fd6c4e4c873c138208ef557, type: 2}
   materials:
     materialImportMode: 2
-    materialName: 0
+    materialName: 2
     materialSearch: 1
     materialLocation: 1
   animations:

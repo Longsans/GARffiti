@@ -47,7 +47,6 @@ public class File : MonoBehaviour
         {
             _instance._modelScripts.Add(modelScript);
             modelScript.Show();
-            ARCursor.Instance.CurrentModelScript = modelScript;
 
             if (modelScript.UsingBottomAnchor)
                 modelScript.BottomAnchor.transform.parent = _instance.gameObject.transform;
@@ -61,7 +60,6 @@ public class File : MonoBehaviour
         List<ModelScript> modelScripts = _instance._modelScripts;
         if (_instance._modelScripts.Remove(modelScript))
         {
-            ARCursor.Instance.CurrentModelScript = null;
             modelScript.Hide();
         }
     }
@@ -80,6 +78,5 @@ public class File : MonoBehaviour
             modelScript.Hide();
         }
         _instance._modelScripts.Clear();
-        ARCursor.Instance.CurrentModelScript = null;
     }
 }

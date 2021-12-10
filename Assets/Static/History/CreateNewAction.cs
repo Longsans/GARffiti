@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class CreateNewAction : Action
 {
-    protected ModelScript _previousModelScript;
     protected Stroke _previousStroke;
 
-    public CreateNewAction(ModelScript previousScript, Stroke previousStroke)
+    public CreateNewAction(Stroke previousStroke)
     {
         _previousStroke = previousStroke;
-        _previousModelScript = previousScript;
     }
 
     public override void Redo()
@@ -19,7 +17,6 @@ public class CreateNewAction : Action
 
     public override void Undo()
     {
-        ARCursor.Instance.CurrentModelScript = _previousModelScript;
         ARCursor.Instance.CurrentStroke = _previousStroke;
     }
 }

@@ -40,7 +40,7 @@ namespace Assets.Scripts._3DPlacing
                     editPanel.transform.SetParent(FloatingCanvas.transform, false);
                     editPanel.transform.localScale = Vector3.one;
                     editPanel.transform.localRotation = Quaternion.Euler(Vector3.zero);
-                    editPanel.GetComponent<EditModelPanelUI>().model = _model;
+                    editPanel.GetComponent<EditModelPanelUI>().Model = _model;
 
                     var lookAt = editPanel.GetComponent<EditPanelLookAt>();
                     lookAt.lookAt = _model.transform;
