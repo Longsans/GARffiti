@@ -671,6 +671,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ARCam: {fileID: 22732920}
+  PlaneMaterial: {fileID: 2100000, guid: 670d5b1b6a9df0a42a32bcd6ba0ac44f, type: 2}
+  PlaneFocusedMaterial: {fileID: 2100000, guid: 04b56aaf851685745ab0d784cc0baddb,
+    type: 2}
   StrokePrefab: {fileID: 5059908639697210027, guid: a210faab42c9ca0468ae0aab8626458f,
     type: 3}
 --- !u!1 &218206285
@@ -1305,7 +1308,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1760703bbd54c04488a8d10600262ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlanePrefab: {fileID: 0}
+  m_PlanePrefab: {fileID: 4776765576899091622, guid: 3738bd65ede154463b2c35064b9e5fdb,
+    type: 3}
   m_DetectionMode: -1
 --- !u!114 &388525033
 MonoBehaviour:
