@@ -241,7 +241,7 @@ public class ModelScript : MonoBehaviour
             _finished = true;
         }
 
-        _lastPosition = gameObject.transform.position;
+        _lastPosition = Location;
     }
 
     public void Destory()
