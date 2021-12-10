@@ -9,8 +9,11 @@ public class ModelScript : MonoBehaviour
     public GameObject MidAnchor;
     public Vector2 MidPoint;
 
+    public GameObject EditPanel;
+
     public bool UsingBottomAnchor { get; private set; }
     public Vector3 Size { get; private set; }
+    private Vector3 instanceRot;
 
     private float _sizeMultiplier = 1;
     public float SizeMultiplier { 
@@ -22,9 +25,9 @@ public class ModelScript : MonoBehaviour
 
             _sizeMultiplier = value;
             if (UsingBottomAnchor)
-                this.BottomAnchor.transform.localScale = new Vector3(value, value, value);
+                this.BottomAnchor.transform.localScale = value * Vector3.one;
             else
-                this.MidAnchor.transform.localScale = new Vector3(value, value, value);
+                this.MidAnchor.transform.localScale = value * Vector3.one;
         }
     }
 
@@ -73,6 +76,7 @@ public class ModelScript : MonoBehaviour
         BottomAnchor.transform.localPosition = gameObject.transform.localPosition;
         UsingBottomAnchor = true;
         UseMidAnchor();
+        instanceRot = new Vector3(0, 0, 0);
     }
 
     public virtual void UseBottomAchor()
@@ -169,6 +173,33 @@ public class ModelScript : MonoBehaviour
         }
 
         MidAnchor.transform.position = position;
+    }
+
+    public void OnSizeChanged(float scaleFactor)
+    {
+        transform.localScale = scaleFactor * Vector3.one;
+        CalculateSize();
+    }
+
+    public void OnRotationXChanged(float x)
+    {
+        transform.eulerAngles = new Vector3(x, instanceRot.y, instanceRot.z);
+        instanceRot.x = x;
+        CalculateSize();
+    }
+
+    public void OnRotationYChanged(float y)
+    {
+        transform.eulerAngles = new Vector3(instanceRot.x, y, instanceRot.z);
+        instanceRot.y = y;
+        CalculateSize();
+    }
+
+    public void OnRotationZChanged(float z)
+    {
+        transform.eulerAngles = new Vector3(instanceRot.x, instanceRot.y, z);
+        instanceRot.z = z;
+        CalculateSize();
     }
 
     public void Finish()

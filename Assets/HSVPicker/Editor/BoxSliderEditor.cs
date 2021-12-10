@@ -4,7 +4,7 @@ using UnityEditor.UI;
 
 namespace HSVPicker.Editors
 {
-	[CustomEditor(typeof(BoxSlider), true)]
+	//[CustomEditor(typeof(BoxSlider), true)]
 	[CanEditMultipleObjects]
 	public class BoxSliderEditor : SelectableEditor
 	{
