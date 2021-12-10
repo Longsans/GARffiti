@@ -15,7 +15,11 @@ public class ModelScript : MonoBehaviour
 
     public bool UsingBottomAnchor { get; private set; }
     public Vector3 Size;
+
+    public Vector3 InstanceRotation => instanceRot;
     private Vector3 instanceRot;
+
+    public Vector3 LastInstRotation { get; private set; }
 
     // Will be record when finish
     private Vector3 _lastPosition;
@@ -36,6 +40,7 @@ public class ModelScript : MonoBehaviour
                 this.MidAnchor.transform.localScale = value * Vector3.one;
         }
     }
+    public float LastSizeMultiplier { get; private set; }
 
     private float _rotation = 0;
     public float Rotation
@@ -231,6 +236,16 @@ public class ModelScript : MonoBehaviour
         CalculateSize();
     }
 
+    public void MarkLastSizeMultiplier()
+    {
+        LastSizeMultiplier = SizeMultiplier;
+    }
+
+    public void MarkLastRotation()
+    {
+        LastInstRotation = InstanceRotation;
+    }
+
     public void Finish()
     {
         if (_finished)
@@ -244,8 +259,9 @@ public class ModelScript : MonoBehaviour
         _lastPosition = gameObject.transform.position;
     }
 
-    public void Destory()
+    public void Destroy()
     {
+        Destroy(EditPanel);
         if (UsingBottomAnchor)
             GameObject.Destroy(BottomAnchor);
         else

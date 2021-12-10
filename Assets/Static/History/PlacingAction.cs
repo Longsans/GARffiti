@@ -24,7 +24,7 @@ public class PlacingAction : Action
 
     public override void Remove()
     {
-        _modelScript.Destory();
+        _modelScript.Destroy();
         _modelScript = null;
     }
 }

@@ -61,6 +61,7 @@ public class File : MonoBehaviour
         if (_instance._modelScripts.Remove(modelScript))
         {
             modelScript.Hide();
+            modelScript.EditPanel?.SetActive(false);
         }
     }
 
@@ -76,6 +77,7 @@ public class File : MonoBehaviour
         foreach (ModelScript modelScript in _instance._modelScripts)
         {
             modelScript.Hide();
+            modelScript.EditPanel?.SetActive(false);
         }
         _instance._modelScripts.Clear();
     }
