@@ -2895,8 +2895,9 @@ MonoBehaviour:
   ModelPrefabs:
   - {fileID: 3661913799397014047, guid: d26e957b752026c40aa68607c9821098, type: 3}
   - {fileID: 2388265580561693088, guid: 41e53ead6df0ac74180add2f222db0bc, type: 3}
+  - {fileID: 1756425027388319136, guid: e0e32357d1bf98b4a83251cbdcca0287, type: 3}
   PreviewRotationSpeed: 30
-  BoundingRect: {x: 230, y: 320}
+  BoundingRect: {x: 200, y: 280}
   UILayer: 5
 --- !u!114 &888421936
 MonoBehaviour:
