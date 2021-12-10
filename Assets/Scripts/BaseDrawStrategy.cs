@@ -57,6 +57,7 @@ namespace Assets.Scripts
                 GameObject newObj = GameObject.Instantiate(Settings.Selected3DModel, cursor.transform.position, Quaternion.identity);
                 _modelScript = newObj.GetComponent<ModelScript>();
                 _modelScript.SizeMultiplier = DefaultModelSize;
+                _modelScript.MarkLastSizeMultiplier();
                 _modelScript.CalculateSize();
             }
             else _modelScript = model;

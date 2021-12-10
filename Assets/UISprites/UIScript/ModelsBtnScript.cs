@@ -37,6 +37,7 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
 
             if (canCalculate && !_rectTransform.rect.Contains(localPos))
             {
+                Debug.Log(eventData.position);
                 _placingModel = ARCursor.Instance.DrawStrategy.PlacingStarted(eventData.position);
             }
             return;
@@ -55,7 +56,7 @@ public class ModelsBtnScript : BtnBase, IPointerUpHandler, IDragHandler, IPointe
 
     public void SelectModel(int index)
     {
-        _previousModel?.Destory();
+        _previousModel?.Destroy();
 
         GameObject model = Instantiate(ModelPrefabs[index], Center.gameObject.transform);
 

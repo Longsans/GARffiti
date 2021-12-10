@@ -23,7 +23,6 @@ public class EditPanelLookAt : MonoBehaviour
 
         if (position != rect.anchoredPosition3D)
         {
-            //Debug.Log($"model: {model.Size.y}");
             rect.anchoredPosition3D = position;
         }
     }
