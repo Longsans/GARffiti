@@ -75,6 +75,9 @@ public static class Settings
         }
     }
 
+    public static Material PlaneMaterial { get; set; }
+    public static Material PlaneFocusedMaterial { get; set; }
+
     public static UnityEvent<Texture2D> onTextureChanged = new UnityEvent<Texture2D>();
     public static UnityEvent<float> onBrushWidthChanged = new UnityEvent<float>();
     public static UnityEvent<Color> onBrushColorChanged = new UnityEvent<Color>();

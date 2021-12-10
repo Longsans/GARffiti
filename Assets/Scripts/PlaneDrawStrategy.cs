@@ -72,7 +72,8 @@ namespace Assets.Scripts
         {
             foreach (var plane in _planeManager.trackables)
             {
-                plane.gameObject.SetActive(plane == currentPlane);
+                plane.GetComponent<MeshRenderer>().sharedMaterial = plane == currentPlane ? 
+                    Settings.PlaneFocusedMaterial : Settings.PlaneMaterial;
             }
         }
 
@@ -90,6 +91,12 @@ namespace Assets.Scripts
             _planeManager = ARCursor.FindObjectOfType<ARPlaneManager>();
             _planeManager.requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.Horizontal | 
                 UnityEngine.XR.ARSubsystems.PlaneDetectionMode.Vertical;
+
+            foreach (var plane in _planeManager.trackables)
+            {
+                plane.gameObject.SetActive(true);
+                plane.GetComponent<MeshRenderer>().sharedMaterial = Settings.PlaneMaterial;
+            }
         }
 
         private ARTrackable _currentPlane;

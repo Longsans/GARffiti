@@ -8,6 +8,9 @@ public class ARCursor : MonoBehaviour
 
     public Camera ARCam;
 
+    public Material PlaneMaterial;
+    public Material PlaneFocusedMaterial;
+
     public enum DrawModeType
     {
         PlanesOnly,
@@ -49,6 +52,8 @@ public class ARCursor : MonoBehaviour
     {
         _lineRend = StrokePrefab.GetComponent<LineRenderer>();
         _instance = this;
+        Settings.PlaneMaterial = PlaneMaterial;
+        Settings.PlaneFocusedMaterial = PlaneFocusedMaterial;
     }
 
     private void OnEnable()
