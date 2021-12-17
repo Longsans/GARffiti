@@ -11,9 +11,9 @@ public class ShowModelPanelBtn : BtnBase
     public Animator Animator;
 
     private string triggerName = "BoolChanged";
-    private string boolName = "Showing";
+    private string intName = "Showing";
 
-    private bool _showed = false;
+    private int _shown = 0;
 
     protected override void Awake()
     {
@@ -23,10 +23,10 @@ public class ShowModelPanelBtn : BtnBase
 
     public override void Clicked()
     {
-        _showed = !_showed;
-        Animator.SetBool(boolName, _showed);
+        _shown = (_shown + 1) % 3;
+        Animator.SetInteger(intName, _shown);
         Animator.SetTrigger(triggerName);
-        if (_showed)
+        if (_shown == 2)
         {
             Image.sprite = ShowedSprite;
         }

@@ -19370,11 +19370,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3701d9c4e62ffec4dafd15286cf7898d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterIntensity: 0
-  rainIntensity: 0
+  masterIntensity: 1
+  rainIntensity: 1
   windIntensity: 0
   fogIntensity: 0
-  lightningIntensity: 0
+  lightningIntensity: 0.1
   autoUpdate: 0
   rainPart: {fileID: 5193016017020414022}
   windPart: {fileID: 5193016016687045445}
